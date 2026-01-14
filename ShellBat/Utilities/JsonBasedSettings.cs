@@ -175,7 +175,7 @@ public abstract class JsonBasedSettings<T> : INotifyPropertyChanged, IDisposable
     public virtual void Backup(TimeSpan maxDuration)
     {
         if (FilePath == null)
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"Cannot backup because {nameof(FilePath)} is not set.");
 
         try
         {

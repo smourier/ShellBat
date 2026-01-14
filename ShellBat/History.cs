@@ -18,9 +18,10 @@ public sealed partial class History : JsonBasedSettings<History>
         if (IOUtilities.PathIsFile(filePath))
         {
             history = Deserialize(filePath, JsonSourceGenerationContext.Default, true);
-            history?.FilePath = filePath;
         }
+
         Current = history ?? new History();
+        Current.FilePath = filePath;
     }
 
     private readonly Navigation _navigation = new();
