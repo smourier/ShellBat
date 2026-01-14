@@ -824,14 +824,14 @@ function showAppInfoMenu(selectPath) {
                         },
                         { isSeparator: true },
                         {
-                            html: Tools.Resource("RegisterShellExtensions"),
+                            html: Tools.Resource("RegisterShellIntegrations"),
                             icon: "fa-brands fa-windows",
-                            onclick: () => dotnet.registerShellExtensions()
+                            onclick: () => dotnet.registerShellIntegrations()
                         },
                         {
-                            html: Tools.Resource("UnregisterShellExtensions"),
+                            html: Tools.Resource("UnregisterShellIntegrations"),
                             icon: "fa-brands fa-windows",
-                            onclick: () => dotnet.unregisterShellExtensions()
+                            onclick: () => dotnet.unregisterShellIntegrations()
                         },
                         { isSeparator: true },
                         {

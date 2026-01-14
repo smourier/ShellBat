@@ -216,21 +216,21 @@ public sealed partial class DotNet(ShellBatWindow window) : DispatchObject
         var asm = Assembly.GetExecutingAssembly();
         return $"<p style='font-family:monospace'>{Program.AppId} V{asm.GetInformationalVersion()}<br/>"
             + $"{asm.GetCopyright()}<br/><br/>"
-            + "<a center href=\"https://stackoverflow.com/users/403671/simon-mourier\"><img src=\"https://stackoverflow.com/users/flair/403671.png\" width=\"208\" height=\"58\" alt=\"Profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\" title=\"profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\"></a>"
+            + "<a center href=\"https://stackoverflow.com/users/403671/simon-mourier?tab=profile\"><img src=\"https://stackexchange.com/users/flair/174359.png\" width=\"208\" height=\"58\" alt=\"Profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\" title=\"profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\"></a>"
             + "<br/>"
             + $"{Res.SourceCode}:<br/><a href='{url}'>{url}</a></p>";
     }
 
-    public void RegisterShellExtensions()
+    public void RegisterShellIntegrations()
     {
         ShellBatInstance.RegisterComObjects(Registry.CurrentUser);
-        window.ShowSuccess(new() { Text = Res.ShellExtensionsRegistered });
+        window.ShowSuccess(new() { Text = Res.ShellIntegrationsRegistered });
     }
 
-    public void UnregisterShellExtensions()
+    public void UnregisterShellIntegrations()
     {
         ShellBatInstance.UnregisterComObjects(Registry.CurrentUser);
-        window.ShowSuccess(new() { Text = Res.ShellExtensionsUnregistered });
+        window.ShowSuccess(new() { Text = Res.ShellIntegrationsUnregistered });
     }
 
     public void StopSearch(string? queryId) => window.StopSearch(queryId);

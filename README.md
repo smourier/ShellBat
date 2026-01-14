@@ -1,18 +1,18 @@
-﻿# Folderra
+﻿# ShellBat
 
 **A modern Windows file explorer with file viewers, multi-instance workflows, terminal integration, search capabilities, and deep Windows Shell interoperability.**
 
 ![Main Window](DocumentationScreenShots/External%20Command%20Line.png)
-This screenshot represents Folderra's main window showcasing its integrated terminal and file browsing capabilities, running [Midnight Commander for Windows](https://github.com/adamyg/mcwin32).
+This screenshot represents ShellBat's main window showcasing its integrated terminal and file browsing capabilities, running [Midnight Commander for Windows](https://github.com/adamyg/mcwin32).
 
-Folderra is designed for power users who want flexibility, and a rich set of tools directly integrated into a single file (yes, *just one unique Folderra.exe file*) application—while still offering a clean UX that works out-of-the-box without configuration.
+ShellBat is designed for power users who want flexibility, and a rich set of tools directly integrated into a single file (yes, *just one unique ShellBat.exe file*) application—while still offering a clean UX that works out-of-the-box without configuration.
 Developers benefit from its advanced viewers, Monaco-powered editor, binary inspection, raw string (ansi, unicode) search and Windows AQS Search.
 
 It supports x64, x86 and ARM64 Windows 10 and higher and only requires the WebView2 runtime (preinstalled on most systems).
 It works fine in Windows Sandbox (WebView2 must be installed), Hyper-V VMs, and other virtual environments.
 
 # 🧭 Navigation
-Folderra provides multiple navigation paradigms:
+ShellBat provides multiple navigation paradigms:
 
 ### **Mouse and Keyboard**
 - Full keyboard navigation and shortcuts.
@@ -39,7 +39,7 @@ Folderra provides multiple navigation paradigms:
 - History is automatically saved. It can be saved per instance if configured (see Instancing chapter below).
 
 ### **Compressed Files**
-Folderra supports navigating inside compressed archive files as virtual folders for Shell items of .7z, .gz, .bz2, .tar, .rar, .tgz, .tbz2, .tzst, .txz, .zst, .xz types.
+ShellBat supports navigating inside compressed archive files as virtual folders for Shell items of .7z, .gz, .bz2, .tar, .rar, .tgz, .tbz2, .tzst, .txz, .zst, .xz types.
 
 It also works for a number of well-known compressed image formats such as nupkg, .docx, .xlsx, .xlsm (more extensions may be added in the future) but you must use the "Open as Folder" menu item:
 
@@ -82,7 +82,7 @@ Users can:
 ![View Options](DocumentationScreenShots/View%20Options.png)
 
 ### **Inline Filter**
-- Begin typing and Folderra automatically opens a filtering input.
+- Begin typing and ShellBat automatically opens a filtering input.
 - Matching items are highlighted (here in yellow), and the filter updates in real time.
 - Works in both Details and Images views.
 
@@ -103,7 +103,7 @@ Image-mode view includes:
 - Video thumbnails are generated using Windows Shell APIs.
 - .SVG files are also supported natively without installing any additional software.
 
-In the screenshot below, Folderra is displaying a .HEIC image, which requires WIC codecs (which are available depending on your Windows version and your setup).
+In the screenshot below, ShellBat is displaying a .HEIC image, which requires WIC codecs (which are available depending on your Windows version and your setup).
 
 ![Thumbnails](DocumentationScreenShots/Images%20View.png)
 
@@ -120,7 +120,7 @@ Allows rapid browsing of image sets in a dense, scrollable layout.
 ![PDF Preview in Images](DocumentationScreenShots/PDF%20Preview%20in%20Images%20View.png)
 
 # 🧰 Context Menu & Shell Integration
-Folderra includes an embedded context menu that allows access to standard Windows Shell actions as well as Folderra-specific tools.
+ShellBat includes an embedded context menu that allows access to standard Windows Shell actions as well as ShellBat-specific tools.
 It can be accessed by right-clicking any item. Available actions:
 - Open (with default registered application)
 - Open with any registered application
@@ -139,19 +139,19 @@ The standard Windows Shell context menu can be accessed from here using the "Win
 
 ![Windows Context Menu](DocumentationScreenShots/Windows%20Context%20Menu.png)
 
-On the other way, Folderra can be opened directly from the Windows Explorer context menu using the "Open With Folderra" item.
+On the other way, ShellBat can be opened directly from the Windows Explorer context menu using the "Open With ShellBat" item.
 
 ![Open With](DocumentationScreenShots/Explorer%20Open%20With.png)
 > [!NOTE]
-> This requires you to register Folderra with the Windows Shell. This can be done easily from the upper right context menu in Folderra, under *Tools > Register Shell Extension*.
-This must be done only once and will also register the `.Folderra` file type as well (see Instancing chapter below).
+> This requires you to register ShellBat with the Windows Shell. This can be done easily from the upper right context menu in ShellBat, under *Tools > Register Shell Extension*.
+This must be done only once and will also register the `.ShellBat` file type as well (see Instancing chapter below).
 > 
 > If you need to unregister it, you can do so from the same menu under *Tools > Unregister Shell Extension*.
 
 # 🖼️ Integrated File Viewers
-Folderra includes specialized viewers. Most of these viewers also work for virtual shell items, such as files inside compressed archives or special shell folders.
+ShellBat includes specialized viewers. Most of these viewers also work for virtual shell items, such as files inside compressed archives or special shell folders.
 
-All viewers are displayed in an embedded window inside Folderra window, containing one tab per viewer.
+All viewers are displayed in an embedded window inside ShellBat window, containing one tab per viewer.
 
 The list of available viewers is automatically determined based on the selected item type, and a default viewer is automatically selected when an item is selected. 
 A given viewer can be pinned to have priority over default viewer selection.
@@ -159,7 +159,7 @@ A given viewer can be pinned to have priority over default viewer selection.
 > [!NOTE]
 > *General*, *Details* and *Binary* are always available.
 
-It's also possible to open another instance of the viewers window in another Folderra instance using the context menu and clicking Shift + *View in...* menu item as shown here:
+It's also possible to open another instance of the viewers window in another ShellBat instance using the context menu and clicking Shift + *View in...* menu item as shown here:
 
 ![Viewer with Details Secondary Window](DocumentationScreenShots/Viewer%20with%20Details%20Secondary%20Window.png)
 > [!NOTE]
@@ -187,7 +187,7 @@ This includes standard properties (name, size, dates, attributes) as well as ext
 - ![PDV Preview](DocumentationScreenShots/Pdv%20Preview.png)
 
 ## **[Preview] Viewer**
-Office files (here Excel) and other supported document types can be previewed directly inside Folderra, using system handlers when available.
+Office files (here Excel) and other supported document types can be previewed directly inside ShellBat, using system handlers when available.
 
 This uses the same preview handlers as Windows Explorer, so any file type supported by Windows should be previewed here.
 
@@ -227,16 +227,16 @@ Renders plain text files with proper encoding detection (UTF-8, UTF-16, ANSI, et
 This is based on the Monaco Editor (the same editor that powers VS Code) and provides syntax highlighting, minimap, etc. for many programming languages.
 The theme can be changed and the language is auto-detected based on file extension, or can be set manually.
 
-Here is a C++ file opened in Folderra's code viewer in light mode:
+Here is a C++ file opened in ShellBat's code viewer in light mode:
 
 ![Code CPP](DocumentationScreenShots/Code%20View%20CPP.png)
 
-Here is a Python file opened in Folderra's code viewer in dark mode:
+Here is a Python file opened in ShellBat's code viewer in dark mode:
 
 ![Code Python](DocumentationScreenShots/Code%20View%20PY.png)
 
 # 🪟 Instancing & Window Management
-Folderra supports multiple instances. A Folderra instance is a Windows process.
+ShellBat supports multiple instances. A ShellBat instance is a Windows process.
 Each instance operates independently but they commmunicate to provide advanced window management features.
 
 ## **New Instances**
@@ -247,28 +247,28 @@ A user can open a new instance using the "Open New Instance" menu item in the up
 ![Open New Instance](DocumentationScreenShots/Open%20New%20Instance.png)
 
 > [!NOTE]
-> - It's very possible to run a Folderra instance as x64 (Folderra.x64.exe) and another one as x86 (Folderra.x86.exe) for example, on the same machine at the same time.
+> - It's very possible to run a ShellBat instance as x64 (ShellBat.x64.exe) and another one as x86 (ShellBat.x86.exe) for example, on the same machine at the same time.
 > - Administrator instances can be run alongside non-administrator instances but they cannot communicate for security reasons.
 > - x86 instances don't support x86 terminals when ran on x64 Windows.
 
 ## **Named Instance**
-Instances may have a defined name or not. A named instance can only be opened (by double-clicking it) using a `.Folderra` file that contains the instance name (by default, the name is the name of the file), otherwise its name is "unspecified".
+Instances may have a defined name or not. A named instance can only be opened (by double-clicking it) using a `.ShellBat` file that contains the instance name (by default, the name is the name of the file), otherwise its name is "unspecified".
 Only named instances can keep their own history, if configured to do so.
 
 A new instance's name is always "unspecified". To create a named instance, use the "Save instance configuration" menu item in the lower right context menu.
-This will create a `.Folderra` file and the file's name will be used as the instance name.
+This will create a `.ShellBat` file and the file's name will be used as the instance name.
 
-A `.Folderra` file is a simple JSON file that contains the instance name and settings. It can be double-clicked from Windows Explorer to open the corresponding named instance.
+A `.ShellBat` file is a simple JSON file that contains the instance name and settings. It can be double-clicked from Windows Explorer to open the corresponding named instance.
 
 > [!NOTE]
-> This requires you to register Folderra with the Windows Shell. See above in the Context Menu & Shell Integration chapter.
+> This requires you to register ShellBat with the Windows Shell. See above in the Context Menu & Shell Integration chapter.
 
-Here is an example of an instance named "My Instance" opened from a `My Instance.Folderra` file, using the **Almond** theme:
+Here is an example of an instance named "My Instance" opened from a `My Instance.ShellBat` file, using the **Almond** theme:
 
 ![Named Instance](DocumentationScreenShots/Named%20Instance.png)
 
 ## **Open in Another Instance**
-When navigating with Folderra, users can open a folder in a new unspecified/unnamed instance, possibly in another screen, or as an administrator.
+When navigating with ShellBat, users can open a folder in a new unspecified/unnamed instance, possibly in another screen, or as an administrator.
 
 ![Open In New Instance](DocumentationScreenShots/Open%20In%20New%20Instance.png)
 
@@ -286,29 +286,29 @@ This is useful for dual-monitor setups, side-by-side comparisons, etc.
 ![View Instance 2](DocumentationScreenShots/View%20In%20Other%20Instance%202.png)
 
 # 🖥️ Terminal & Command Line Integration
-Folderra includes integrated terminal support.
+ShellBat includes integrated terminal support.
 - Uses Windows pseudo-console APIs
 - Supports CMD, PowerShell, PowerShell Core, WSL's Bash, or any other Windows shells (requires configuration)
 - Multiple terminals can be opened per instance
 - Terminals can be opened in new instances, possibly as Administrator or in another screen
-- In the terminal is `cmd.exe`, it can automatically sync to the current directory of the instance both ways (from Folderra to cmd.exe and from cmd.exe to Folderra)
+- In the terminal is `cmd.exe`, it can automatically sync to the current directory of the instance both ways (from ShellBat to cmd.exe and from cmd.exe to ShellBat)
 
 ![New Terminal](DocumentationScreenShots/New%20Terminal.png)
 
 ## **Terminal Sync**
-Here a CD command is issued in cmd.exe which causes the main Folderra instance to navigate to the same directory:
-The other way works also, navigating in Folderra updates the cmd.exe prompt automatically.
+Here a CD command is issued in cmd.exe which causes the main ShellBat instance to navigate to the same directory:
+The other way works also, navigating in ShellBat updates the cmd.exe prompt automatically.
 
 ![Terminal Sync 1](DocumentationScreenShots/Terminal%20Sync%201.png)
 ![Terminal Sync 2](DocumentationScreenShots/Terminal%20Sync%202.png)
 
 ## **Terminal Run**
-Folderra can run commands from .cmd, .bat and .exe console app directly from the context menu using the "Run in Terminal" menu item:
+ShellBat can run commands from .cmd, .bat and .exe console app directly from the context menu using the "Run in Terminal" menu item:
 
 ![Terminal Run](DocumentationScreenShots/Terminal%20Run.png)
 
 # 🔍 Search Tools
-Folderra offers two search systems:
+ShellBat offers two search systems:
 
 - **Find Strings**, an internal engine for scanning file contents, including binaries for a piece of text.
 There's an option to search only text files or all files (binary search). The text is searched using ANSI and Unicode encoding.
@@ -323,7 +323,7 @@ It only works for folders indexed by Windows Search.
 
 # 🔔 Change Notifications
 ![Change Notifications](DocumentationScreenShots/Change%20Notifications.png)
-Folderra watches directory changes and provides optional alerts when items are created, removed, or modified.
+ShellBat watches directory changes and provides optional alerts when items are created, removed, or modified.
 
 # ⚙️ Settings & Configuration
 Settings are split into:
@@ -335,27 +335,27 @@ Settings are split into:
 ![Options](DocumentationScreenShots/Options.png)
 
 **Tools**
-Folderra includes several maintenance and utility tools accessible from the upper right context menu under *Tools*:
+ShellBat includes several maintenance and utility tools accessible from the upper right context menu under *Tools*:
 
 ![Tools](DocumentationScreenShots/Tools.png)
 
 # 🖌 Theme Management
-Themes are CSS-based and can dramatically change Folderra’s UI. Custom themes can be loaded from anywhere on disk.
+Themes are CSS-based and can dramatically change ShellBat’s UI. Custom themes can be loaded from anywhere on disk.
 
 ![Themes](DocumentationScreenShots/Themes.png)
 
 ## **Custom Theme**
 
-Built-in themes definition can be found in the [GitHub Themes subfolder](https://github.com/smourier/Folderra/tree/main/Folderra/Resources/Themes).
+Built-in themes definition can be found in the [GitHub Themes subfolder](https://github.com/smourier/ShellBat/tree/main/ShellBat/Resources/Themes).
 
-To author a custom theme, you need to create a `.folderraTheme` file. The file's name will be the theme's name.
-The file is a JSON file wich contains CSS variables override. The list of available CSS variables can be found in the [Variable.css file](https://github.com/smourier/Folderra/blob/main/Folderra/WebRoot/Styles/Variables.css) on GitHub.
+To author a custom theme, you need to create a `.shellBatTheme` file. The file's name will be the theme's name.
+The file is a JSON file wich contains CSS variables override. The list of available CSS variables can be found in the [Variable.css file](https://github.com/smourier/ShellBat/blob/main/ShellBat/WebRoot/Styles/Variables.css) on GitHub.
 
-A `.css` can accompany the `.folderraTheme` file to provide additional CSS rules. You should look at existing themes for reference and avoid putting too many rules in the CSS file to support future Folderra UI changes.
+A `.css` can accompany the `.shellBatTheme` file to provide additional CSS rules. You should look at existing themes for reference and avoid putting too many rules in the CSS file to support future ShellBat UI changes.
 
 ## **Transparency & Acrylic**
-Folderra supports background window transparency and a built-in acrylic effect.
-This can be enabled from the `.folderraTheme` file like this:
+ShellBat supports background window transparency and a built-in acrylic effect.
+This can be enabled from the `.shellBatTheme` file like this:
 
 ```json
   ...
@@ -372,11 +372,11 @@ The *Acrylic Almond*" built-in theme demonstrates this feature:
 1. Clone the repository.
 2. Open the solution in **Visual Studio 2026**.
 3. Restore NuGet packages.
-4. Build and run `Folderra.exe`.
-5. For AOT publishing, use Folderra-provided Visual Studio's Publish profiles (x86/x64/ARM64).
+4. Build and run `ShellBat.exe`.
+5. For AOT publishing, use ShellBat-provided Visual Studio's Publish profiles (x86/x64/ARM64).
 
 # 📜 How it works
-Folderra is an hybrid **.NET + JS** application combining native Windows APIs with modern web technologies via WebView2. This allows for a rich UI while maintaining deep integration with the Windows Shell.
+ShellBat is an hybrid **.NET + JS** application combining native Windows APIs with modern web technologies via WebView2. This allows for a rich UI while maintaining deep integration with the Windows Shell.
 
 It's similar in concept to frameworks such as [Electron](https://www.electronjs.org/) or others, but without the overhead of all the dependencies libraries.
 
@@ -387,7 +387,7 @@ The following technologies are used on the Windows side (100% C# interop code):
 - WebView2 using [WebView2Aot](https://github.com/smourier/WebView2Aot) (AOT-compatible WebView2 bindings)
 - DirectX, Direct Composition, using [DirectNAot](https://github.com/smourier/DirectNAot) (AOT-compatible Direct-* bindings)
 - Windows Imaging Component (WIC) using [WicNet](https://github.com/smourier/WicNet) (AOT-compatible WIC bindings)
-- Windows Shell APIs using the side projects [ShellN](https://github.com/smourier/Folderra/tree/main/ShellN) (AOT-compatible Windows Shell API bindings) and [ShellN.Extensions](https://github.com/smourier/Folderra/tree/main/ShellN.Extensions) (utility classes for ShellN)
+- Windows Shell APIs using the side projects [ShellN](https://github.com/smourier/ShellBat/tree/main/ShellN) (AOT-compatible Windows Shell API bindings) and [ShellN.Extensions](https://github.com/smourier/ShellBat/tree/main/ShellN.Extensions) (utility classes for ShellN)
 - [Markdig](https://github.com/xoofx/markdig) for Markdown rendering
 
 The following technologies are used on the webview side (100% JS and CSS):
@@ -395,4 +395,4 @@ The following technologies are used on the webview side (100% JS and CSS):
 - [Xterm.js](https://xtermjs.org/) for terminal emulation
 - [Animate.css](https://animate.style/), [SweetAlert2](https://sweetalert2.github.io/) and [Toastify JS](https://github.com/apvarun/toastify-js) for animations and notifications
 
-Folderra doesn't use any Javascript framework because it doesn't need one. The entire UI is built using vanilla JS and CSS only.
+ShellBat doesn't use any Javascript framework because it doesn't need one. The entire UI is built using vanilla JS and CSS only.

@@ -338,14 +338,11 @@ public static class ShellBatExtensions
         return false;
     }
 
-    public static void OpenRecycleBin()
+    public static void OpenRecycleBin() => Process.Start(new ProcessStartInfo
     {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = $"shell:::{ShellN.Constants.CLSID_RecycleBin:B}",
-            UseShellExecute = true,
-        });
-    }
+        FileName = $"shell:::{ShellN.Constants.CLSID_RecycleBin:B}",
+        UseShellExecute = true,
+    });
 
     public static long ToUnixTimeMilliseconds(this DateTime dateTime)
     {

@@ -34,6 +34,11 @@
 
 	<ItemGroup>
 		<None Remove="Resources\NoiseAsset_256X256.png" />
+		<None Remove="Resources\Themes\Acrylic Almond.shellbatTheme" />
+		<None Remove="Resources\Themes\Almond.shellbatTheme" />
+		<None Remove="Resources\Themes\Caterpillar.shellbatTheme" />
+		<None Remove="Resources\Themes\Default.shellbatTheme" />
+		<None Remove="Resources\Themes\VT323.shellbatTheme" />
 		<None Remove="Resources\vs.0.55.1.zip" />
 		<None Remove="WebRoot\Assets\cmd-16.png" />
 		<None Remove="WebRoot\Assets\cmd-32.png" />
@@ -47,12 +52,14 @@
 		<None Remove="WebRoot\Assets\vsw-16.png" />
 		<None Remove="WebRoot\Assets\vsw-32.png" />
 		<None Remove="WebRoot\Modules\Search.js" />
+		<None Remove="WebRoot\Modules\ShellBat.js" />
 		<None Remove="WebRoot\node_modules\%40jsnix\addon-unicode-graphemes\lib\addon-unicode-graphemes.js" />
 		<None Remove="WebRoot\node_modules\%40xterm\addon-fit\lib\addon-fit.js" />
 		<None Remove="WebRoot\node_modules\%40xterm\xterm\css\xterm.css" />
 		<None Remove="WebRoot\node_modules\%40xterm\xterm\lib\xterm.js" />
 		<None Remove="WebRoot\node_modules\toastify-js\src\toastify.css" />
 		<None Remove="WebRoot\node_modules\toastify-js\src\toastify.js" />
+		<None Remove="WebRoot\Styles\ShellBat.css" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -78,11 +85,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Icon Include="Resources\ShellBat.ico">
+			<Index>1</Index>
+		</Icon>
+		<Icon Include="Resources\ShellBatTheme.ico">
+			<Index>2</Index>
+		</Icon>
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="Resources\NoiseAsset_256X256.png" />
 		<EmbeddedResource Include="Resources\Themes\Acrylic Almond.css" />
+		<EmbeddedResource Include="Resources\Themes\Acrylic Almond.shellbatTheme" />
 		<EmbeddedResource Include="Resources\Themes\Almond.css" />
+		<EmbeddedResource Include="Resources\Themes\Almond.shellbatTheme" />
+		<EmbeddedResource Include="Resources\Themes\Caterpillar.shellbatTheme" />
+		<EmbeddedResource Include="Resources\Themes\Default.shellbatTheme" />
 		<EmbeddedResource Include="Resources\Themes\VT323.css" />
 		<EmbeddedResource Include="Resources\Themes\Caterpillar.css" />
+		<EmbeddedResource Include="Resources\Themes\VT323.shellbatTheme" />
 		<EmbeddedResource Include="Resources\vs.0.55.1.zip" />
 		<EmbeddedResource Include="runtimes\win-arm64\native\WebView2Loader.dll" />
 		<EmbeddedResource Include="runtimes\win-x64\native\WebView2Loader.dll" />
@@ -108,6 +129,7 @@
 		<WebRootResource Include="WebRoot\Modules\Scrollbar.js" />
 		<WebRootResource Include="WebRoot\Modules\GlobalEvents.js" />
 		<WebRootResource Include="WebRoot\Modules\Search.js" />
+		<WebRootResource Include="WebRoot\Modules\ShellBat.js" />
 		<WebRootResource Include="WebRoot\Modules\Viewers\Code.js" />
 		<WebRootResource Include="WebRoot\Modules\Viewers\Executable.js" />
 		<WebRootResource Include="WebRoot\Modules\Viewers\Preview.js" />
@@ -133,6 +155,7 @@
 		<WebRootResource Include="WebRoot\node_modules\toastify-js\src\toastify.css" />
 		<WebRootResource Include="WebRoot\node_modules\toastify-js\src\toastify.js" />
 		<WebRootResource Include="WebRoot\Styles\Scrollbar.css" />
+		<WebRootResource Include="WebRoot\Styles\ShellBat.css" />
 		<WebRootResource Include="WebRoot\Styles\Viewers\Code.css" />
 		<WebRootResource Include="WebRoot\Styles\Viewers\Executable.css" />
 		<WebRootResource Include="WebRoot\Styles\Viewers\Preview.css" />

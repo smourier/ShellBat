@@ -2419,6 +2419,27 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         return false;
     }
 
+    protected override void OnNavigationStarting(object? sender, NavigationEventArgs e)
+    {
+        // we don't want to navigate to external links inside the app
+        if (e.Uri != null && Uri.TryCreate(e.Uri, UriKind.Absolute, out var uri) && uri.Scheme != Uri.UriSchemeFile)
+        {
+            e.Cancel = true;
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = e.Uri,
+                    UseShellExecute = true,
+                });
+            }
+            catch
+            {
+                // continue
+            }
+        }
+    }
+
     protected override void OnKeyDown(object? sender, KeyEventArgs e)
     {
         // note: even if accelerators are disabled in WebView settings we won't

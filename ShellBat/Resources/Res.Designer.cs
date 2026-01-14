@@ -1465,15 +1465,6 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open with ShellBat.
-        /// </summary>
-        internal static string OpenWithShellBat {
-            get {
-                return ResourceManager.GetString("OpenWithShellBat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Open with new ShellBat terminal....
         /// </summary>
         internal static string OpenWithNewTerminal {
@@ -1488,6 +1479,15 @@ namespace ShellBat.Resources {
         internal static string OpenWithShell {
             get {
                 return ResourceManager.GetString("OpenWithShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open with ShellBat.
+        /// </summary>
+        internal static string OpenWithShellBat {
+            get {
+                return ResourceManager.GetString("OpenWithShellBat", resourceCulture);
             }
         }
         
@@ -1699,11 +1699,11 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Register shell extensions.
+        ///   Looks up a localized string similar to Register shell integration.
         /// </summary>
-        internal static string RegisterShellExtensions {
+        internal static string RegisterShellIntegrations {
             get {
-                return ResourceManager.GetString("RegisterShellExtensions", resourceCulture);
+                return ResourceManager.GetString("RegisterShellIntegrations", resourceCulture);
             }
         }
         
@@ -1969,20 +1969,20 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shell extensions registered.
+        ///   Looks up a localized string similar to Shell integrations registered.
         /// </summary>
-        internal static string ShellExtensionsRegistered {
+        internal static string ShellIntegrationsRegistered {
             get {
-                return ResourceManager.GetString("ShellExtensionsRegistered", resourceCulture);
+                return ResourceManager.GetString("ShellIntegrationsRegistered", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shell extensions unregistered.
+        ///   Looks up a localized string similar to Shell integrations unregistered.
         /// </summary>
-        internal static string ShellExtensionsUnregistered {
+        internal static string ShellIntegrationsUnregistered {
             get {
-                return ResourceManager.GetString("ShellExtensionsUnregistered", resourceCulture);
+                return ResourceManager.GetString("ShellIntegrationsUnregistered", resourceCulture);
             }
         }
         
@@ -2257,11 +2257,11 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unregister shell extensions.
+        ///   Looks up a localized string similar to Unregister shell integrations.
         /// </summary>
-        internal static string UnregisterShellExtensions {
+        internal static string UnregisterShellIntegrations {
             get {
-                return ResourceManager.GetString("UnregisterShellExtensions", resourceCulture);
+                return ResourceManager.GetString("UnregisterShellIntegrations", resourceCulture);
             }
         }
         

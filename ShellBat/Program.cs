@@ -71,8 +71,6 @@ internal static class Program
         _ = ThemeResources.EnsureFilesAsync();
         _ = MonacoResources.EnsureFilesAsync();
 
-        _ = Task.Run(Settings.Current.Backup);
-
         ShellBatInstance.WithInstance(instance =>
         {
             if (!WindowsVersionUtilities.IsWindows10OrGreater())
@@ -133,6 +131,8 @@ internal static class Program
 
                 ShellBatInstance.LogError("FirstChanceException", e.Exception.ToString());
             };
+
+            _ = Task.Run(Settings.Current.Backup);
 
             using var app = new ShellBatApplication();
             using var win = new ShellBatWindow();

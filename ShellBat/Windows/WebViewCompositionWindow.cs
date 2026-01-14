@@ -96,6 +96,10 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                         _navigationEvents[id] = e;
 
                         OnNavigationStarting(this, e);
+                        if (e.Cancel)
+                        {
+                            args.put_Cancel(true).ThrowOnError();
+                        }
                     }), ref _navigationStarting).ThrowOnError();
 
                     _webView.Object.add_NavigationCompleted(new CoreWebView2NavigationCompletedEventHandler((sender, args) =>
@@ -109,13 +113,15 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                         var success = BOOL.FALSE;
                         args.get_IsSuccess(ref success).ThrowOnError();
 
-                        var e = _navigationEvents[id];
-                        e.Type = NavigationEventType.NavigationCompleted;
-                        e.WebErrorStatus = status;
-                        e.IsSuccess = success;
+                        if (_navigationEvents.TryGetValue(id, out var e))
+                        {
+                            e.Type = NavigationEventType.NavigationCompleted;
+                            e.WebErrorStatus = status;
+                            e.IsSuccess = success;
 
-                        _navigationEvents.Remove(id);
-                        OnNavigationCompleted(this, e);
+                            _navigationEvents.Remove(id);
+                            OnNavigationCompleted(this, e);
+                        }
                     }), ref _navigationCompleted).ThrowOnError();
 
                     ControllerCreated();

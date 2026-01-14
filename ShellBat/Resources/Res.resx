@@ -582,11 +582,8 @@
   <data name="Options" xml:space="preserve">
     <value>Options</value>
   </data>
-  <data name="RegisterShellExtensions" xml:space="preserve">
-    <value>Register shell extensions</value>
-  </data>
-  <data name="UnregisterShellExtensions" xml:space="preserve">
-    <value>Unregister shell extensions</value>
+  <data name="UnregisterShellIntegrations" xml:space="preserve">
+    <value>Unregister shell integrations</value>
   </data>
   <data name="OpenWithShellBat" xml:space="preserve">
     <value>Open with ShellBat</value>
@@ -756,11 +753,11 @@
   <data name="Themes" xml:space="preserve">
     <value>Themes</value>
   </data>
-  <data name="ShellExtensionsRegistered" xml:space="preserve">
-    <value>Shell extensions registered</value>
+  <data name="ShellIntegrationsRegistered" xml:space="preserve">
+    <value>Shell integrations registered</value>
   </data>
-  <data name="ShellExtensionsUnregistered" xml:space="preserve">
-    <value>Shell extensions unregistered</value>
+  <data name="ShellIntegrationsUnregistered" xml:space="preserve">
+    <value>Shell integrations unregistered</value>
   </data>
   <data name="RefreshCurrentTheme" xml:space="preserve">
     <value>Refresh current theme</value>
@@ -935,5 +932,8 @@
   </data>
   <data name="UnpinViewer" xml:space="preserve">
     <value>Unpin '{0}' viewer</value>
+  </data>
+  <data name="RegisterShellIntegrations" xml:space="preserve">
+    <value>Register shell integration</value>
   </data>
 </root>

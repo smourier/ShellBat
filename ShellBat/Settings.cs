@@ -44,10 +44,10 @@ public sealed partial class Settings : JsonBasedSettings<Settings>
         if (IOUtilities.PathIsFile(ConfigurationFilePath))
         {
             settings = Deserialize(ConfigurationFilePath, JsonSourceNoDefaultGenerationContext.Default, true);
-            settings?.FilePath = ConfigurationFilePath;
         }
 
         Current = settings ?? new Settings();
+        Current.FilePath = ConfigurationFilePath;
 
         // delete various caches
         Task.Run(PreviewViewer.DeleteTempFiles);
