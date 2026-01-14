@@ -1969,7 +1969,7 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shell integrations registered.
+        ///   Looks up a localized string similar to Shell integration registered.
         /// </summary>
         internal static string ShellIntegrationsRegistered {
             get {
@@ -1978,7 +1978,7 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shell integrations unregistered.
+        ///   Looks up a localized string similar to Shell integration unregistered.
         /// </summary>
         internal static string ShellIntegrationsUnregistered {
             get {
@@ -2257,7 +2257,7 @@ namespace ShellBat.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unregister shell integrations.
+        ///   Looks up a localized string similar to Unregister shell integration.
         /// </summary>
         internal static string UnregisterShellIntegrations {
             get {

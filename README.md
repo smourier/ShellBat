@@ -1,4 +1,4 @@
-﻿# ShellBat
+﻿<p align="center"><img  src="DocumentationScreenShots/ShellBat-128.png"></p>
 
 **A modern Windows file explorer with file viewers, multi-instance workflows, terminal integration, search capabilities, and deep Windows Shell interoperability.**
 
@@ -61,7 +61,7 @@ The file will be opened directly after export, which usually launches Microsoft 
 ![CSVExport](DocumentationScreenShots/CSVExport.png)
 
 # 🔅 Global Zoom
-![Zoom](DocumentationScreenShots/Zoom%20250.png)
+![Zoom](DocumentationScreenShots/Zoom.png)
 The view dynamically adapts to scaling, including high-DPI displays. Zooming (250% in the screenshot) can be adjusted with Ctrl + Mouse Wheel (only in Details-mode view).
 
 # 🧩 Views & Layout
@@ -201,7 +201,7 @@ Displays images using WebView2 or Windows Imaging Component (WIC) depending on i
 ### **[Video] Viewer**
 Includes metadata display, detail panes, and responsive playback UI.
 
-![Video Viewer](DocumentationScreenShots/Vide%20Viewer%20with%20Details%20Secondary%20Window.png)
+![Video Viewer](DocumentationScreenShots/Viewer%20with%20Details%20Secondary%20Window.png)
 
 ### **[Audio] Viewer**
 Supports playback and metadata visualization for common audio formats.

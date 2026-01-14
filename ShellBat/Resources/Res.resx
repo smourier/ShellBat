@@ -583,7 +583,7 @@
     <value>Options</value>
   </data>
   <data name="UnregisterShellIntegrations" xml:space="preserve">
-    <value>Unregister shell integrations</value>
+    <value>Unregister shell integration</value>
   </data>
   <data name="OpenWithShellBat" xml:space="preserve">
     <value>Open with ShellBat</value>
@@ -754,10 +754,10 @@
     <value>Themes</value>
   </data>
   <data name="ShellIntegrationsRegistered" xml:space="preserve">
-    <value>Shell integrations registered</value>
+    <value>Shell integration registered</value>
   </data>
   <data name="ShellIntegrationsUnregistered" xml:space="preserve">
-    <value>Shell integrations unregistered</value>
+    <value>Shell integration unregistered</value>
   </data>
   <data name="RefreshCurrentTheme" xml:space="preserve">
     <value>Refresh current theme</value>
