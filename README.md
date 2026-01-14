@@ -38,6 +38,23 @@ ShellBat provides multiple navigation paradigms:
 - “Back to…” and “Forward to…” menus display complete history lists.
 - History is automatically saved. It can be saved per instance if configured (see Instancing chapter below).
 
+### **Open From Explorer Instances**
+ShellBat can navigate to a folder from any open Windows Explorer instance on the Desktop, using the "Open From Explorer" context menu item.
+Here is an example of ShellBat proposing to open one of two folders from Explorer instances (`d:\temp\x` and `d:\sql`):
+
+![Open From Explorer](DocumentationScreenShots/Open%20From%20Explorer.png)
+
+### **Open From Visual Studio Instances**
+Similarly, ShellBat can navigate to a folder from any open Visual Studio instance (solution) on the Desktop, using the "Open From Visual Studio" context menu item.
+Here is an example of ShellBat proposing to open detected folders:
+
+- Solution folders
+- Project folders
+- Project build output folders
+
+![Open From Visual Studio](DocumentationScreenShots/Open%20From%20Visual%20Studio.png)
+ShellBat is here using the VT323 theme :-)
+
 ### **Compressed Files**
 ShellBat supports navigating inside compressed archive files as virtual folders for Shell items of .7z, .gz, .bz2, .tar, .rar, .tgz, .tbz2, .tzst, .txz, .zst, .xz types.
 
