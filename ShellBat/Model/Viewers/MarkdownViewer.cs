@@ -29,7 +29,7 @@ public partial class MarkdownViewer(Entry entry) : Viewer(entry)
         if (stream == null)
             return null;
 
-        var sw = new StreamReader(stream);
+        using var sw = new StreamReader(stream);
         var text = sw.ReadToEnd();
         var result = Markdown.ToHtml(text, _pipeline);
         return result;
