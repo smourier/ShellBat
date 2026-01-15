@@ -6,7 +6,7 @@
 
 [assembly: AssemblyTitle("ShellN.Extensions")]
 [assembly: AssemblyProduct("ShellN")]
-[assembly: AssemblyCopyright("Copyright (C) 2014-2025 Simon Mourier. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (C) 2014-2026 Simon Mourier. All rights reserved.")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyDescription("AOT-Compatible Windows Shell Extensions for ShellN")]
 [assembly: AssemblyCompany("Simon Mourier")]
