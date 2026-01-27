@@ -2259,20 +2259,6 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         }
     }
 
-    protected override void OnMouseButtonDoubleClick(object? sender, MouseButtonEventArgs e)
-    {
-        if (e.Button == MouseButton.Left)
-        {
-            var caption = GetCaptionRect();
-            if (caption != null && caption.Value.Contains(e.Point.ScreenToClient(Handle)))
-            {
-                ExecuteScript("editAddress();");
-                return;
-            }
-        }
-        base.OnMouseButtonDoubleClick(sender, e);
-    }
-
     public virtual bool RunCommand(ShellBatCommand command)
     {
         ArgumentNullException.ThrowIfNull(command);
@@ -2890,6 +2876,24 @@ public partial class ShellBatWindow : WebViewCompositionWindow
             {
                 RefreshEntries(null);
             }
+        }
+
+        if (msg == MessageDecoder.WM_NCLBUTTONDBLCLK)
+        {
+            var pt = lParam.ToPOINT();
+            if (VIRTUAL_KEY.VK_SHIFT.IsPressed())
+            {
+                var caption = GetCaptionRect();
+                if (caption != null && caption.Value.Contains(pt.ScreenToClient(Handle)))
+                {
+                    ExecuteScript("editAddress();");
+                }
+            }
+            else
+            {
+                Show(IsZoomed ? SHOW_WINDOW_CMD.SW_RESTORE : SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED);
+            }
+            return 0;
         }
 
         return base.WindowProc(hwnd, msg, wParam, lParam);

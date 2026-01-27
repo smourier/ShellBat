@@ -492,9 +492,6 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             case MessageDecoder.WM_RBUTTONDOWN:
             case MessageDecoder.WM_MBUTTONDOWN:
             case MessageDecoder.WM_XBUTTONDOWN:
-                //case MessageDecoder.WM_NCLBUTTONDOWN:
-                //case MessageDecoder.WM_NCRBUTTONDOWN:
-                //case MessageDecoder.WM_NCMBUTTONDOWN:
                 button = WindowsExtensions.MessageToButton(msg, wParam);
                 _capturedButtons[(int)button] = true;
                 DirectN.Functions.SetCapture(hwnd);
@@ -505,10 +502,6 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             case MessageDecoder.WM_RBUTTONUP:
             case MessageDecoder.WM_MBUTTONUP:
             case MessageDecoder.WM_XBUTTONUP:
-                //case MessageDecoder.WM_NCLBUTTONUP:
-                //case MessageDecoder.WM_NCRBUTTONUP:
-                //case MessageDecoder.WM_NCMBUTTONUP:
-                //case MessageDecoder.WM_NCXBUTTONUP:
                 button = WindowsExtensions.MessageToButton(msg, wParam);
                 _capturedButtons[(int)button] = false;
                 DirectN.Functions.ReleaseCapture();
@@ -519,10 +512,6 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             case MessageDecoder.WM_RBUTTONDBLCLK:
             case MessageDecoder.WM_MBUTTONDBLCLK:
             case MessageDecoder.WM_XBUTTONDBLCLK:
-            case MessageDecoder.WM_NCLBUTTONDBLCLK:
-            case MessageDecoder.WM_NCRBUTTONDBLCLK:
-            case MessageDecoder.WM_NCMBUTTONDBLCLK:
-            case MessageDecoder.WM_NCXBUTTONDBLCLK:
                 button = WindowsExtensions.MessageToButton(msg, wParam);
                 var e3 = new MouseButtonEventArgs(lParam.ToPOINT(), (MODIFIERKEYS_FLAGS)wParam.Value.LOWORD(), button);
                 OnMouseButtonDoubleClick(e3);

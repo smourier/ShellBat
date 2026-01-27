@@ -86,9 +86,6 @@ public class ShellBatSysInfo(Window? window, string separator = " | ")
     public string ApplicationCompany => _assembly.GetCompany() ?? string.Empty;
 
     [LocalizedCategory(ApplicationCategoryName)]
-    public string ApplicationDescription => _assembly.GetDescription() ?? string.Empty;
-
-    [LocalizedCategory(ApplicationCategoryName)]
     public string ApplicationProduct => _assembly.GetProduct() ?? string.Empty;
 
     [LocalizedCategory(ApplicationCategoryName)]
@@ -101,23 +98,23 @@ public class ShellBatSysInfo(Window? window, string separator = " | ")
     [LocalizedCategory(SoftwareCategoryName)]
     public string? KernelVersion => WindowsVersionUtilities.KernelVersion?.ToString();
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public bool IsTabletPC => DirectN.Functions.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_TABLETPC) != 0;
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public bool IsRemotelyControlled => DirectN.Functions.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_REMOTECONTROL) != 0;
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public bool IsRemoteSession => _isRemoteSession.Value;
     private static readonly Lazy<bool> _isRemoteSession = new(GetIsRemoteSession, true);
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public string VirtualMachineType => GetVirtualMachineType() ?? Res.NoneDetected;
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public int ProcessorCount => Environment.ProcessorCount;
 
-    [LocalizedCategory(ApplicationCategoryName)]
+    [LocalizedCategory(SystemCategoryName)]
     public string ProcessorArchitecture => SystemUtilities.GetProcessorArchitecture().ToString();
 
     [LocalizedCategory(SoftwareCategoryName)]
