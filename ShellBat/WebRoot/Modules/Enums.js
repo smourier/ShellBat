@@ -15,7 +15,7 @@
     static MoveHistoryBack = 13;
     static MoveHistoryForward = 14;
     static Log = 15;
-    static RestartAsAdministrator = 16;
+    static CaptionButtonsSizeChanged = 16;
     static OpenNewInstanceAdministrator = 17;
     static EntryDoubleClicked = 18;
     static UpdateNow = 19;

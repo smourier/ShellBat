@@ -450,7 +450,7 @@ async function showAppActions(selectPath) {
         items.push({
             html: Tools.Resource("RestartAsAdministrator"),
             icon: "fa-solid fa-shield-halved",
-            eventType: Enums.WebEventType.RestartAsAdministrator
+            onclick: () => dotnet.RestartAsAdministrator()
         });
     }
 
@@ -1540,6 +1540,16 @@ function sendCaptionSizeChanged() {
         height: rct.height
     };
     dotnet.sendEvent(Enums.WebEventType.CaptionSizeChanged, sumRc);
+
+    const rcMin = document.querySelector("#app-min-button").getBoundingClientRect();
+    const rcClose = document.querySelector("#app-close-button").getBoundingClientRect();
+    const sumRcButtons = {
+        x: rcMin.left,
+        y: rcMin.top,
+        width: rcClose.right - rcMin.left,
+        height: rcMin.height
+    };
+    dotnet.sendEvent(Enums.WebEventType.CaptionButtonsSizeChanged, sumRcButtons);
 }
 
 function getEntryElement(e) {

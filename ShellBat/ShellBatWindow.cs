@@ -20,6 +20,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
     private bool? _draggingIsUs;
     private bool _firstTimeNavigated = true;
     private RECT _captionRect; // in webbrowser coordinates
+    private RECT _captionButtonsRect; // in webbrowser coordinates
     private double _scale = 1;
     private float _direction = 1.1f;
     private int _terminalId;
@@ -139,6 +140,10 @@ public partial class ShellBatWindow : WebViewCompositionWindow
 
                 case WebEventType.CaptionSizeChanged:
                     _captionRect = e.Value.AsDOMRect();
+                    break;
+
+                case WebEventType.CaptionButtonsSizeChanged:
+                    _captionButtonsRect = e.Value.AsDOMRect();
                     break;
 
                 case WebEventType.VisualViewportChanged:
@@ -276,10 +281,6 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                     {
                         Navigate(historyEntry.ParsingName, true);
                     }
-                    break;
-
-                case WebEventType.RestartAsAdministrator:
-                    RestartAsAdministrator();
                     break;
 
                 case WebEventType.EntryDoubleClicked:
@@ -2877,6 +2878,28 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 RefreshEntries(null);
             }
         }
+
+        // this doesn't work
+        //if (msg == MessageDecoder.WM_NCHITTEST)
+        //{
+        //    var rc = WindowRect;
+        //    var ncx = lParam.Value.SignedLOWORD();
+        //    var ncy = lParam.Value.SignedHIWORD();
+        //    var clix = ncx - rc.left;
+        //    var cliy = ncy - rc.top;
+        //    var buttons = ScaleRect(_captionButtonsRect);
+        //    if (buttons.Contains(clix, cliy))
+        //    {
+        //        var pos = buttons.Width / 3;
+        //        if (clix >= buttons.right - pos)
+        //            return new LRESULT((nint)HT.HTCLOSE);
+
+        //        if (clix >= buttons.right - 2 * pos)
+        //            return new LRESULT((nint)HT.HTMAXBUTTON);
+
+        //        return new LRESULT((nint)HT.HTMINBUTTON);
+        //    }
+        //}
 
         if (msg == MessageDecoder.WM_NCLBUTTONDBLCLK)
         {

@@ -18,7 +18,7 @@ public enum WebEventType
     MoveHistoryBack = 13,
     MoveHistoryForward = 14,
     Log = 15,
-    RestartAsAdministrator = 16,
+    CaptionButtonsSizeChanged = 16,
     OpenNewInstanceAdministrator = 17,
     EntryDoubleClicked = 18,
     UpdateNow = 19,

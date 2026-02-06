@@ -50,6 +50,7 @@ public sealed partial class DotNet(ShellBatWindow window) : DispatchObject
     public void OpenWithExplorer(object?[]? selection) => _ = window.OpenWithExplorer(selection?.Select(o => o?.ToString()).WhereNotNull());
     public bool IsCurrentFavorite() => Settings.Current.GetFavoritesIndex(window.CurrentEntry) >= 0;
     public Task<bool> ToggleCurrentFavorite() => Settings.Current.ToggleFavorite(window.CurrentEntry);
+    public void RestartAsAdministrator() => window.RestartAsAdministrator();
 
     public bool RemoveHistoryEntries(string? rootParsingName)
     {

@@ -413,7 +413,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             case MessageDecoder.WM_NCHITTEST:
                 var htn = HitTestWithoutWindowsFrame();
                 if (htn.HasValue)
-                    return new LRESULT { Value = new nint((int)htn.Value) };
+                    return new LRESULT((nint)htn.Value);
 
                 HT? HitTestWithoutWindowsFrame()
                 {
