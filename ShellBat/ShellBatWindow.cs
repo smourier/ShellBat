@@ -2960,7 +2960,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         return base.OnResized(type, size);
     }
 
-    protected override Icon? LoadCreationIcon() => Program.LoadIcon();
+    protected override Icon? LoadCreationIcon() => Program.LoadIcon(32);
 
     protected virtual void SavePlacement()
     {

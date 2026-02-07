@@ -39,7 +39,7 @@ public partial class ShellBatUpdateWindow : D2DRenderWindow
         });
     }
 
-    protected override Icon? LoadCreationIcon() => Program.LoadIcon();
+    protected override Icon? LoadCreationIcon() => Program.LoadIcon(32);
 
     protected override void OnPositionChanging(object? sender, ValueEventArgs<WINDOWPOS> e)
     {

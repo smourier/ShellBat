@@ -213,10 +213,10 @@ internal static class Program
         }
     }
 
-    internal static Icon? LoadIcon()
+    internal static Icon? LoadIcon(int size)
     {
         var exeHandle = DirectN.Functions.GetModuleHandleW(PWSTR.From(Environment.ProcessPath));
-        var icon = Icon.FromHandle(DirectN.Functions.LoadImageW(new HINSTANCE { Value = exeHandle.Value }, new(ShellBatInstance.ShellBatIconIndex), GDI_IMAGE_TYPE.IMAGE_ICON, 16, 16, 0).Value, true);
+        var icon = Icon.FromHandle(DirectN.Functions.LoadImageW(new HINSTANCE { Value = exeHandle.Value }, new(ShellBatInstance.ShellBatIconIndex), GDI_IMAGE_TYPE.IMAGE_ICON, size, size, 0).Value, true);
         return icon;
     }
 
