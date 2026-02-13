@@ -1213,6 +1213,11 @@ public static class System
     public static PROPERTYKEY StorageProviderUIStatus => new(new("e77e90df-6271-4f5b-834f-2dd1f245dda4"), 2);
     
     /// <summary>
+    /// <b>System.StorageProviderUserAccountKind</b> of <b>VT_UI4</b> type.
+    /// </summary>
+    public static PROPERTYKEY StorageProviderUserAccountKind => new(new("b2f9b9d6-fec4-4dd5-94d7-8957488c807b"), 17);
+    
+    /// <summary>
     /// <b>System.StorageProviderUserId</b> of <b>VT_LPWSTR</b> type.
     /// </summary>
     public static PROPERTYKEY StorageProviderUserId => new(new("b2f9b9d6-fec4-4dd5-94d7-8957488c807b"), 13);
