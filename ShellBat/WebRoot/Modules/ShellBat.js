@@ -36,6 +36,7 @@ window.getSelection = getSelection;
 window.openSearch = openSearch;
 window.openMenu = openMenu;
 window.windowHandle = syncDotnet.getWindowHandle();
+window.toggleFullScreen = toggleFullScreen;
 
 document.getElementById("app-filter-type").innerHTML = Tools.Resource("ViewFilter");
 const viewFilterInput = document.getElementById("app-filter-value");
@@ -348,6 +349,14 @@ function openMenu(id, selectPath) {
         case Enums.MenuId.AppHistory:
             showHistory(selectPath);
             break;
+    }
+}
+
+function toggleFullScreen(on) {
+    if (!document.fullscreenElement && on) {
+        entriesParent.requestFullscreen();
+    } else if (!on) {
+        document.exitFullscreen?.();
     }
 }
 

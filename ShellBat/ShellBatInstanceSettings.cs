@@ -23,6 +23,9 @@ public sealed partial class ShellBatInstanceSettings : JsonBasedSettings<ShellBa
     [Browsable(false)]
     public WINDOWPLACEMENT? MainPlacement { get => GetPropertyValue<WINDOWPLACEMENT?>(); set => SetPropertyValue(value); }
 
+    [Browsable(false)]
+    public WINDOWPLACEMENT? FullScreenPrevPlacement { get => GetPropertyValue<WINDOWPLACEMENT?>(); set => SetPropertyValue(value); }
+
     [WebPropertyGridProperty(Windows11Only = true)]
     [LocalizedCategory(Settings.AppearanceCategoryName)]
     [DefaultValue(DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND)]
@@ -33,7 +36,7 @@ public sealed partial class ShellBatInstanceSettings : JsonBasedSettings<ShellBa
         {
             if (SetPropertyValue(value))
             {
-                Program.MainWindow?.SetCorner();
+                Program.MainWindow?.SetCorner(value);
             }
         }
     }

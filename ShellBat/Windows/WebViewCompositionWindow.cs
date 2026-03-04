@@ -45,7 +45,14 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
         : base(title, style: style, extendedStyle: extendedStyle, rect: rect)
     {
         MonitorHandle = DirectN.Functions.MonitorFromWindow(Handle, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
-        SetCorner();
+        if (IsFullScreen)
+        {
+            SetCorner(DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DONOTROUND);
+        }
+        else
+        {
+            SetCorner(ShellBatInstance.Current.Settings.WindowCorner);
+        }
         var options = GetEnvironmentOptions();
         WebView2.Functions.CreateCoreWebView2EnvironmentWithOptions(PWSTR.Null, PWSTR.From(Settings.WebView2UserDataPath), options!,
             new CoreWebView2CreateCoreWebView2EnvironmentCompletedHandler((result, envObj) =>
@@ -134,13 +141,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     protected ComObject<ICoreWebView2Environment3>? Environment => _environment;
 
     public HMONITOR MonitorHandle { get; private set; }
-
-    protected virtual CoreWebView2EnvironmentOptions? GetEnvironmentOptions() => null;
-    protected virtual RECT? GetCaptionRect() => null;
-    protected virtual void ControllerCreated()
-    {
-    }
-
+    public bool IsFullScreen => GetFullScreenBounds() == WindowRect;
     public virtual bool CanChangeCursor { get; set; }
     public bool IsDropTarget
     {
@@ -167,6 +168,20 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                 _isDropTarget = false;
             }
         }
+    }
+
+    protected virtual CoreWebView2EnvironmentOptions? GetEnvironmentOptions() => null;
+    protected virtual RECT? GetCaptionRect() => null;
+    protected virtual void ControllerCreated()
+    {
+    }
+
+    public virtual RECT GetFullScreenBounds()
+    {
+        var monitor = GetMonitor(MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST)!;
+        var bounds = monitor.Bounds;
+        bounds = bounds.Inflate(1, 1, 1, 1); // work around a weird 1px gap that would otherwise appear on the right and bottom edges, probably due to some rounding issue in the DWM when using the exact monitor size
+        return bounds;
     }
 
     protected override bool OnFocusChanged(bool setOrKill)
@@ -249,10 +264,9 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
         OnMonitorChanged(this, EventArgs.Empty);
     }
 
-    protected unsafe internal virtual void SetCorner()
+    protected unsafe internal virtual void SetCorner(DWM_WINDOW_CORNER_PREFERENCE corner)
     {
         // works only on Windows 11, does nothing on Windows 10, so we don't check error
-        var corner = ShellBatInstance.Current.Settings.WindowCorner;
         DirectN.Functions.DwmSetWindowAttribute(Handle, (uint)DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, (nint)(&corner), 4);
     }
 

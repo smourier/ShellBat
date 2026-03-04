@@ -445,6 +445,54 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         RunTaskOnUIThread(() => ExecuteScript($"refreshEntries(null, \"{HttpUtility.JavaScriptStringEncode(reason)}\");"));
     }
 
+    public virtual void ToggleFullScreen() => RunTaskOnUIThread(() =>
+    {
+        var fsBounds = GetFullScreenBounds();
+        var isFullScreen = fsBounds == WindowRect;
+        if (!isFullScreen)
+        {
+            SetCorner(DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DONOTROUND);
+            var wp = new WINDOWPLACEMENT();
+            DirectN.Functions.GetWindowPlacement(Handle, ref wp);
+            ShellBatInstance.Current.Settings.FullScreenPrevPlacement = wp;
+            ShellBatInstance.Current.SerializeSettings();
+            SetWindowPos(HWND.TOP,
+                fsBounds.left,
+                fsBounds.top,
+                fsBounds.Width,
+                fsBounds.Height,
+                SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED);
+        }
+        else
+        {
+            var prev = ShellBatInstance.Current.Settings.FullScreenPrevPlacement;
+            // make sure prev is in a visible screen before restoring, otherwise we might end up with a window that cannot be moved by the user anymore
+            if (prev != null && prev.Value.IsValid && WebScreen.All.Any(s => s.WorkingArea.IntersectsWith(prev.Value.rcNormalPosition)))
+            {
+                DirectN.Functions.SetWindowPlacement(Handle, prev.Value);
+            }
+            else
+            {
+                var monitor = DirectN.Extensions.Utilities.Monitor.Primary;
+                if (monitor != null)
+                {
+                    var area = monitor.WorkingArea;
+                    var width = area.Width * 3 / 4;
+                    var height = area.Height * 3 / 4;
+                    ResizeAndMove(RECT.Sized(
+                        area.left + (area.Width - width) / 2,
+                        area.top + (area.Height - height) / 2,
+                        width,
+                        height));
+                }
+            }
+            SetCorner(ShellBatInstance.Current.Settings.WindowCorner);
+        }
+
+        // this is not ok as WebView FS removes up & down bars
+        //ExecuteScript($"toggleFullScreen({on.ToString().ToLowerInvariant()});");
+    });
+
     public virtual void UpdateRemoteInstances(IReadOnlyList<ShellBatRemoteInstance> instances)
     {
         ArgumentNullException.ThrowIfNull(instances);
@@ -2333,6 +2381,10 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 WebView?.Object.OpenDevToolsWindow();
                 return true;
 
+            case nameof(ShellBatCommand.ToggleFullScreen):
+                ToggleFullScreen();
+                return true;
+
             case nameof(ShellBatCommand.OpenWithExplorer):
                 _ = OpenWithExplorerWithSelection();
                 return true;
@@ -2440,6 +2492,10 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                     Clipboard.Empty();
                     e.Handled = true;
                 }
+                break;
+
+            case VIRTUAL_KEY.VK_F11:
+                ToggleFullScreen();
                 break;
 
             default:

@@ -116,7 +116,7 @@ public class CommandKey(VirtualKey key) : IEquatable<CommandKey>
     public bool IsHotkeyAvailable(HWND hwnd) => Key.Key.IsHotkeyAvailable(HotKeyModifiers, hwnd);
     public bool IsValid(HWND handle)
     {
-        Application.TraceVerbose($"Validating command key: {this} k:{Key}");
+        //Application.TraceVerbose($"Validating command key: {this} k:{Key}");
         if (_invalidKeys.ContainsKey(Key.Key))
             return false;
 

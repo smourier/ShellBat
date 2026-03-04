@@ -42,6 +42,7 @@ public class ShellBatCommand(string name)
     public static ShellBatCommand Reload { get; } = new(nameof(Reload)) { Key = new(VIRTUAL_KEY.VK_F5), IsReadOnly = true, CategoryName = Res.Builtin };
     public static ShellBatCommand EditAddress { get; } = new(nameof(EditAddress)) { Key = new(VIRTUAL_KEY.VK_F6), IsReadOnly = true, CategoryName = Res.Builtin };
     public static ShellBatCommand Rename { get; } = new(nameof(Rename)) { Key = new(VIRTUAL_KEY.VK_F2), IsReadOnly = true, CategoryName = Res.Builtin };
+    public static ShellBatCommand ToggleFullScreen { get; } = new(nameof(ToggleFullScreen)) { Key = new(VIRTUAL_KEY.VK_F11), IsReadOnly = true, CategoryName = Res.Builtin };
     public static ShellBatCommand OpenDevTools { get; } = new(nameof(OpenDevTools)) { Key = new(VIRTUAL_KEY.VK_F12), IsReadOnly = true, IsHidden = true };
 
     public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
