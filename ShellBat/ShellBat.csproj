@@ -306,8 +306,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="1.1.0" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.3" />
+		<PackageReference Include="Markdig" Version="1.1.1" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 	</ItemGroup>
 
