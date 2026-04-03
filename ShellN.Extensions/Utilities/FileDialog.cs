@@ -2,30 +2,43 @@
 
 public abstract class FileDialog : InterlockedComObject<IFileDialog>
 {
-    protected FileDialog(IComObject<IFileDialog> fileDialog, nint site = 0)
+    public event EventHandler<FileDialogEventArgs>? Event;
+    private FileDialogEvents? _events;
+    private uint _eventsCookie;
+
+    protected FileDialog(IComObject<IFileDialog> fileDialog, nint site = 0, bool enableEvents = false)
         : base(fileDialog)
     {
         if (site != 0 && NativeObject is IObjectWithSite ows)
         {
             ows.SetSite(site).ThrowOnError();
         }
+
+        if (enableEvents)
+        {
+            _events = new FileDialogEvents();
+            _events.Event += (s, e) => OnEvent(this, e);
+            NativeObject.Advise(_events, out _eventsCookie).ThrowOnError();
+        }
     }
 
+    protected virtual void OnEvent(object sender, FileDialogEventArgs e) => Event?.Invoke(sender, e);
+
     // type format is "Description|*.ext1;*.ext2"
-    public virtual void SetFileTypes(IEnumerable<string> types)
+    public virtual void SetFileTypes(IEnumerable<string> types, bool throwOnError = true)
     {
         if (types == null)
             return;
 
         static string getName(string type)
         {
-            var parts = type.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            var parts = type.Split('|');
             return parts.Length > 1 ? parts[0] : type;
         }
 
         static string getSpec(string type)
         {
-            var parts = type.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            var parts = type.Split('|');
             return parts.Length > 1 ? parts[1] : type;
         }
 
@@ -39,7 +52,7 @@ public abstract class FileDialog : InterlockedComObject<IFileDialog>
 
         try
         {
-            NativeObject.SetFileTypes(fileTypes.Length(), fileTypes);
+            NativeObject.SetFileTypes(fileTypes.Length(), fileTypes).ThrowOnError(throwOnError);
         }
         finally
         {
@@ -53,10 +66,12 @@ public abstract class FileDialog : InterlockedComObject<IFileDialog>
 
     public virtual void SetOptions(FILEOPENDIALOGOPTIONS options) => NativeObject.SetOptions(options);
     public virtual void SetFileTypeIndex(uint index) => NativeObject.SetFileTypeIndex(index);
+    public virtual int GetFileTypeIndex() { if (NativeObject.GetFileTypeIndex(out var index).IsError) return -1; return (int)index; }
     public virtual void SetFileName(string name) => NativeObject.SetFileName(PWSTR.From(name));
     public virtual void SetFileNameLabel(string name) => NativeObject.SetFileNameLabel(PWSTR.From(name));
     public virtual void SetDefaultExtension(string extension) => NativeObject.SetDefaultExtension(PWSTR.From(extension));
     public virtual void SetTitle(string title) => NativeObject.SetTitle(PWSTR.From(title));
+    public virtual void SetFilter(IShellItemFilter? filter) => NativeObject.SetFilter(filter!).ThrowOnError();
     public virtual bool Show(HWND owner) => NativeObject.Show(owner).IsOk;
 
     public virtual string? GetFileName()
@@ -86,6 +101,12 @@ public abstract class FileDialog : InterlockedComObject<IFileDialog>
     {
         if (disposing)
         {
+            var cookie = Interlocked.Exchange(ref _eventsCookie, 0);
+            if (cookie != 0)
+            {
+                NativeObject.Unadvise(cookie);
+            }
+
             if (RawNativeObject is IObjectWithSite ows)
             {
                 ows.SetSite(0);
