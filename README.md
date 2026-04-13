@@ -3,7 +3,7 @@
 **A modern Windows file explorer with file viewers, multi-instance workflows, terminal integration, search capabilities, and deep Windows Shell interoperability.**
 
 ![Main Window](DocumentationScreenShots/External%20Command%20Line.png)
-This screenshot represents ShellBat's main window showcasing its integrated terminal and file browsing capabilities, running [Midnight Commander for Windows](https://github.com/adamyg/mcwin32).
+This screenshot represents ShellBat's main window showcasing its integrated terminal and file browsing capabilities, running [Midnight Commander for Windows](https://github.com/adamyg/mcwin32) as an example.
 
 ShellBat is designed for power users who want flexibility, and a rich set of tools directly integrated into a single file (yes, *just one unique ShellBat.exe file*) application—while still offering a clean UX that works out-of-the-box without configuration.
 Developers benefit from its advanced viewers, Monaco-powered editor, binary inspection, raw string (ansi, unicode) search and Windows AQS Search.
