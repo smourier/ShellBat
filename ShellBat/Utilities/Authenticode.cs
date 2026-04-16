@@ -27,7 +27,7 @@ public static partial class Authenticode
     }
 
     public static AuthenticodeSignature? GetSignature(string filePath) => GetSignature(filePath, out _);
-    public static unsafe AuthenticodeSignature? GetSignature(string filePath, out HRESULT error)
+    public static AuthenticodeSignature? GetSignature(string filePath, out HRESULT error)
     {
         ArgumentNullException.ThrowIfNull(filePath);
         using var msg = Message.GetFromFile(filePath, out error);

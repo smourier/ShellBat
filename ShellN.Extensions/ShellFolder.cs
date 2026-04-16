@@ -136,15 +136,59 @@ public sealed class ShellFolder : ShellItem
         }
     }
 
+    public IEnumerable<ShellItem> EnumerateAllChildrenWhere(Func<ShellItem, bool> includes, _SHCONTF? flags = null, bool owned = true)
+    {
+        ArgumentNullException.ThrowIfNull(includes);
+        foreach (var child in EnumerateAllChildren(flags, owned))
+        {
+            if (includes(child))
+                yield return child;
+
+            child.Dispose();
+        }
+    }
+
+    public IEnumerable<ShellItem> EnumerateAllChildren(_SHCONTF? flags = null, bool owned = true)
+    {
+        var folders = new List<ShellFolder>();
+
+        _SHCONTF? fl = flags;
+        if (fl != null)
+        {
+            fl |= _SHCONTF.SHCONTF_FOLDERS;
+        }
+
+        foreach (var child in EnumerateChildren(fl, owned))
+        {
+            if (child is ShellFolder folder)
+            {
+                folders.Add(folder);
+            }
+            else
+            {
+                if (flags == null || flags.Value.HasFlag(_SHCONTF.SHCONTF_NONFOLDERS))
+                    yield return child;
+            }
+        }
+
+        foreach (var folder in folders)
+        {
+            foreach (var child in folder.EnumerateAllChildren(flags, owned))
+            {
+                yield return child;
+            }
+
+            if (flags == null || flags.Value.HasFlag(_SHCONTF.SHCONTF_FOLDERS))
+                yield return folder;
+        }
+    }
+
     public IEnumerable<ShellItem> EnumerateChildren(_SHCONTF? flags = null, bool owned = true)
     {
         IComObject<IBindCtx>? context = null;
         if (flags.HasValue)
         {
-            context = IBindCtxExtensions.CreateBindCtx();
-            if (context == null)
-                throw new InvalidOperationException();
-
+            context = IBindCtxExtensions.CreateBindCtx() ?? throw new InvalidOperationException();
             context.Object.AddToBindCtx(Constants.STR_ENUM_ITEMS_FLAGS, flags.Value).ThrowOnError();
         }
 

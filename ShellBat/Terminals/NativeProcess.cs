@@ -36,7 +36,7 @@ public sealed partial class NativeProcess(STARTUPINFOEX startupInfo, PROCESS_INF
         GC.SuppressFinalize(this);
     }
 
-    public static unsafe NativeProcess? Start(string commandLine, string? currentDirectory, nint attributes, nint hPC, bool throwOnError = true) =>
+    public static NativeProcess? Start(string commandLine, string? currentDirectory, nint attributes, nint hPC, bool throwOnError = true) =>
         Start(commandLine, currentDirectory, attributes, hPC, out _, throwOnError);
 
     public static unsafe NativeProcess? Start(string commandLine, string? currentDirectory, nint attributes, nint hPC, out Exception? error, bool throwOnError = true)

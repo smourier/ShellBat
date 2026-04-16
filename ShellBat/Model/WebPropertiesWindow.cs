@@ -20,7 +20,7 @@ public partial class WebPropertiesWindow : WebWindow
     public Entry Entry { get; }
     public string ParsingName => Entry.ParsingName;
 
-    public unsafe override bool IsInstanceEqual(object? other) => ComObject.WithComInstance(other, unk =>
+    public override bool IsInstanceEqual(object? other) => ComObject.WithComInstance(other, unk =>
     {
         if (ComObject.ComWrappers.GetOrCreateObjectForComInstance(unk, CreateObjectFlags.Unwrap) is not WebPropertiesWindow obj)
             return false;

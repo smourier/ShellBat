@@ -4,7 +4,7 @@ public sealed partial class WindowsSearchResult : InterlockedComObject<IRowset>
 {
     private readonly IComObject<IGetRow> _getRow;
 
-    public unsafe WindowsSearchResult(IComObject<IRowset> rowset)
+    public WindowsSearchResult(IComObject<IRowset> rowset)
         : base(rowset)
     {
         // tripoli does that for us (IPropertyStore) so we don't need to do too much of dusty OLE DB :-)

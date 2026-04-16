@@ -254,7 +254,7 @@ public class AuthenticodeSignerInfo
         }
     }
 
-    private static unsafe ComMemory? GetObject(nint pointer, uint count, PSTR type)
+    private static ComMemory? GetObject(nint pointer, uint count, PSTR type)
     {
         uint size = 0;
         ShellN.Functions.CryptDecodeObjectEx(CERT_QUERY_ENCODING_TYPE.X509_ASN_ENCODING | CERT_QUERY_ENCODING_TYPE.PKCS_7_ASN_ENCODING,

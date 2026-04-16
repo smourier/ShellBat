@@ -64,20 +64,47 @@ public abstract class FileDialog : InterlockedComObject<IFileDialog>
         }
     }
 
-    public virtual void SetOptions(FILEOPENDIALOGOPTIONS options) => NativeObject.SetOptions(options);
-    public virtual void SetFileTypeIndex(uint index) => NativeObject.SetFileTypeIndex(index);
+    public virtual void SetDefaultFolder(IComObject<IShellItem> folder) => NativeObject.SetDefaultFolder(folder?.Object!).ThrowOnError();
+    public virtual void SetDefaultFolder(ShellFolder folder) => NativeObject.SetDefaultFolder(folder?.NativeObject!).ThrowOnError();
+    public virtual void SetDefaultFolder(IShellItem folder) => NativeObject.SetDefaultFolder(folder).ThrowOnError();
+
+    public virtual void SetNavigationRoot(ShellItem root) => ((IFileDialog2)NativeObject).SetNavigationRoot(root?.NativeObject!).ThrowOnError();
+    public virtual void SetNavigationRoot(IComObject<IShellItem> root) => ((IFileDialog2)NativeObject).SetNavigationRoot(root?.Object!).ThrowOnError();
+    public virtual void SetNavigationRoot(IShellItem root) => ((IFileDialog2)NativeObject).SetNavigationRoot(root).ThrowOnError();
+
+    public virtual void SetClientGuid(in Guid guid) => NativeObject.SetClientGuid(guid).ThrowOnError();
+    public virtual void ClearClientData() => NativeObject.ClearClientData().ThrowOnError();
+
+    public virtual void AddPlace(IComObject<IShellItem> item, FDAP fdap) => NativeObject.AddPlace(item?.Object!, fdap).ThrowOnError();
+    public virtual void AddPlace(ShellItem item, FDAP fdap) => NativeObject.AddPlace(item?.NativeObject!, fdap).ThrowOnError();
+    public virtual void AddPlace(IShellItem item, FDAP fdap) => NativeObject.AddPlace(item, fdap).ThrowOnError();
+
+    public virtual void SetOptions(FILEOPENDIALOGOPTIONS options) => NativeObject.SetOptions(options).ThrowOnError();
+    public virtual void SetFileTypeIndex(uint index) => NativeObject.SetFileTypeIndex(index).ThrowOnError();
     public virtual int GetFileTypeIndex() { if (NativeObject.GetFileTypeIndex(out var index).IsError) return -1; return (int)index; }
-    public virtual void SetFileName(string name) => NativeObject.SetFileName(PWSTR.From(name));
-    public virtual void SetFileNameLabel(string name) => NativeObject.SetFileNameLabel(PWSTR.From(name));
-    public virtual void SetDefaultExtension(string extension) => NativeObject.SetDefaultExtension(PWSTR.From(extension));
-    public virtual void SetTitle(string title) => NativeObject.SetTitle(PWSTR.From(title));
+    public virtual void SetFileName(string name) => NativeObject.SetFileName(PWSTR.From(name)).ThrowOnError();
+    public virtual void SetFileNameLabel(string name) => NativeObject.SetFileNameLabel(PWSTR.From(name)).ThrowOnError();
+    public virtual void SetDefaultExtension(string extension) => NativeObject.SetDefaultExtension(PWSTR.From(extension)).ThrowOnError();
+    public virtual void SetTitle(string title) => NativeObject.SetTitle(PWSTR.From(title)).ThrowOnError();
     public virtual void SetFilter(IShellItemFilter? filter) => NativeObject.SetFilter(filter!).ThrowOnError();
     public virtual bool Show(HWND owner) => NativeObject.Show(owner).IsOk;
+
+    public virtual void SetCancelButtonLabel(string label) => ((IFileDialog2)NativeObject).SetCancelButtonLabel(PWSTR.From(label)).ThrowOnError();
+    public virtual void SetOkButtonLabel(string label) => ((IFileDialog2)NativeObject).SetOkButtonLabel(PWSTR.From(label)).ThrowOnError();
 
     public virtual string? GetFileName()
     {
         NativeObject.GetFileName(out var pszName);
         return pszName.ToStringAndDispose();
+    }
+
+    public virtual ShellItem? GetCurrentSelection()
+    {
+        NativeObject.GetCurrentSelection(out var item);
+        if (item == null)
+            return null;
+
+        return ShellItem.FromObject(item);
     }
 
     public virtual ShellFolder? GetFolder()
@@ -97,6 +124,7 @@ public abstract class FileDialog : InterlockedComObject<IFileDialog>
         return ShellItem.FromObject(item);
     }
 
+    public virtual void Close(HRESULT hr) => NativeObject.Close(hr).ThrowOnError();
     protected override void Dispose(bool disposing)
     {
         if (disposing)

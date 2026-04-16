@@ -31,7 +31,7 @@ public partial class WindowsEvents : DispatchEvents
         }
     }
 
-    protected unsafe override void OnEvent(object sender, DispatchEventArgs e)
+    protected override void OnEvent(object sender, DispatchEventArgs e)
     {
         const uint DISPID_WINDOWREGISTERED = 200;
         const uint DISPID_WINDOWREVOKED = 201;

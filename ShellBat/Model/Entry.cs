@@ -710,7 +710,7 @@ public partial class Entry : DispatchObject, IEquatable<Entry>
         return null;
     }
 
-    public static unsafe IComObject<IDataObject>? CreateDataObject(IEnumerable<Entry> entries, bool throwOnError = true)
+    public static IComObject<IDataObject>? CreateDataObject(IEnumerable<Entry> entries, bool throwOnError = true)
     {
         var items = entries.Select(e => e.GetItem(throwOnError ? ShellItemParsingOptions.None : ShellItemParsingOptions.DontThrowOnError)).WhereNotNull();
         return ShellItem.CreateDataObject(items, disposeItems: true, throwOnError: throwOnError);
