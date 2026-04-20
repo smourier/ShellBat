@@ -5,12 +5,15 @@
 Details view:
 
 ![Breadcrumb Navigation](DocumentationScreenShots/Breadcrumb%20Navigation.png)
+
 Thumbnails & previews view:
 
 ![Thumbnails](DocumentationScreenShots/Images%20View.png)
+
 Integrated files viewers (here PDF):
 
 ![PDF Preview](DocumentationScreenShots/Pdv%20Preview.png)
+
 Customizable UI themes:
 
 ![Find Strings](DocumentationScreenShots/FindStrings.png)
