@@ -2863,7 +2863,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 var items = new Dictionary<string, ShellItem>(StringComparer.OrdinalIgnoreCase);
                 foreach (var name in _draggingNames)
                 {
-                    var item = ShellItem.FromParsingName(name, null);
+                    var item = ShellItem.FromParsingName(name, null, throwOnError: false);
                     if (item != null)
                     {
                         items[name] = item;

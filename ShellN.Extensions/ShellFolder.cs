@@ -124,6 +124,19 @@ public sealed class ShellFolder : ShellItem
         });
     }
 
+    public ShellItem? FindChild(Func<ShellItem, bool> where, _SHCONTF? flags = null, bool owned = true)
+    {
+        ArgumentNullException.ThrowIfNull(where);
+        foreach (var child in EnumerateChildren(flags, owned))
+        {
+            if (where(child))
+                return child;
+
+            child.Dispose();
+        }
+        return null;
+    }
+
     public IEnumerable<ShellItem> EnumerateChildrenWhere(Func<ShellItem, bool> includes, _SHCONTF? flags = null, bool owned = true)
     {
         ArgumentNullException.ThrowIfNull(includes);

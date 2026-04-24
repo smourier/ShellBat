@@ -80,6 +80,48 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return FromObject(ppv, noFolder, owned);
     }
 
+    public static ShellItem? FromSplitParsingName(string name, IBindCtx? context = null, bool noFolder = false, bool owned = true, bool throwOnError = true)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        var segments = SplitPath(name).ToArray();
+        if (segments.Length == 0)
+            return null;
+
+        if (segments.Length == 1)
+            return FromParsingName(name, context, noFolder, owned, throwOnError);
+
+        ShellFolder? folder = null;
+        // get folders first
+        for (var i = 0; i < segments.Length - 1; i++)
+        {
+            var segment = segments[i];
+            ShellItem? item;
+            if (i == 0)
+            {
+                item = FromParsingName(segment, context, false, owned, throwOnError);
+            }
+            else
+            {
+                item = folder!.FindChild(s => s.SIGDN_PARENTRELATIVEPARSING.EqualsIgnoreCase(segment));
+            }
+
+            if (item is not ShellFolder f)
+            {
+                item?.Dispose();
+                folder?.Dispose();
+                return null;
+            }
+
+            folder = f;
+        }
+        if (folder == null)
+            return null;
+
+        var lastSegment = segments[^1];
+        return folder.FindChild(i => i.SIGDN_PARENTRELATIVEPARSING.EqualsIgnoreCase(lastSegment));
+    }
+
     public static ShellItem? FromDataObject(IComObject<IDataObject>? dataObject, DATAOBJ_GET_ITEM_FLAGS flags = DATAOBJ_GET_ITEM_FLAGS.DOGIF_DEFAULT, bool noFolder = false, bool owned = true, bool throwOnError = true)
         => FromDataObject(dataObject?.Object, flags, noFolder, owned, throwOnError);
 
@@ -399,6 +441,39 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
     ItemId? IItemWithId.Id => GetIdList()?.LastId;
 
     public override string ToString() => SIGDN_NORMALDISPLAY ?? string.Empty;
+
+    public HRESULT TryOpenStream(out Stream? stream, IBindCtx? ctx = null)
+    {
+        stream = null;
+        var hr = NativeObject.BindToHandler(ctx, Constants.BHID_Stream, typeof(DirectN.IStream).GUID, out var unk);
+        if (hr.IsError)
+            return hr;
+
+        var strm = DirectN.Extensions.Com.ComObject.FromPointer<DirectN.IStream>(unk);
+        if (strm == null)
+            return DirectN.Constants.E_FAIL;
+
+        stream = new StreamOnIStream(strm.Object, true);
+        return DirectN.Constants.S_OK;
+    }
+
+    public Stream? OpenStream(IComObject<IBindCtx>? ctx = null) => OpenStream(ctx?.Object);
+    public Stream? OpenStream(IBindCtx? ctx = null)
+    {
+        NativeObject.BindToHandler(ctx, Constants.BHID_Stream, typeof(DirectN.IStream).GUID, out var unk);
+        var stream = DirectN.Extensions.Com.ComObject.FromPointer<DirectN.IStream>(unk);
+        if (stream == null)
+            return null;
+
+        return new StreamOnIStream(stream.Object, true);
+    }
+
+    public Stream? OpenReadStream() => OpenStream((IBindCtx?)null);
+    public Stream? OpenWriteStream()
+    {
+        using var ctx = IBindCtxExtensions.CreateBindCtx(STGM.STGM_WRITE)!;
+        return OpenStream(ctx);
+    }
 
     public nint GetStorageItem(bool throwOnError = true)
     {
@@ -896,6 +971,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return folder.RenameItem(this, newName, out renamedItem, flags, throwOnError);
     }
 
+    // note this can be used with T = IPortableDevice, bhid = BHID_SFObject, when used on WPD namespace extensions (Apple iPhone, etc.)
     public IComObject<T>? BindToHandler<T>(Guid bhid, IComObject<IBindCtx>? context = null)
     {
         NativeObject.BindToHandler(context?.Object!, bhid, typeof(T).GUID, out var unk);
@@ -987,5 +1063,71 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         var bitmap = WicImagingFactory.CreateBitmapFromHBITMAP(hbmp, options);
         DirectN.Functions.DeleteObject(new HGDIOBJ { Value = hbmp });
         return bitmap;
+    }
+
+    public static IEnumerable<string> SplitPath(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            yield break;
+
+        var current = new StringBuilder();
+        var i = 0;
+        while (i < path.Length)
+        {
+            var c = path[i];
+            if (c != '\\')
+            {
+                current.Append(c);
+                i++;
+                continue;
+            }
+
+            // we hit a '\'. If the next char is also '\', this '\' is the separator between the previous
+            // segment and an opaque "\\x\y" segment that starts right after it.
+            var startsOpaque = i + 1 < path.Length && path[i + 1] == '\\';
+
+            // flush current segment (the '\' is a separator, not part of any segment).
+            yield return current.ToString();
+            current.Clear();
+            i++; // consume the separator '\'
+
+            if (startsOpaque)
+            {
+                // parse the opaque "\\server\share" block INTO current, but do not flush it here.
+                // The next '\' (if any) will be handled by the outer loop as a regular separator, and the final flush at the end of the
+                // method handles the case where the string ends with the opaque block.
+
+                // consume the "\\" opaque marker.
+                while (i < path.Length && path[i] == '\\')
+                {
+                    current.Append(path[i]);
+                    i++;
+                }
+
+                // consume "server"/"host" (non-backslash chars).
+                while (i < path.Length && path[i] != '\\')
+                {
+                    current.Append(path[i]);
+                    i++;
+                }
+
+                // consume the single internal '\'.
+                if (i < path.Length && path[i] == '\\')
+                {
+                    current.Append(path[i]);
+                    i++;
+                }
+
+                // consume "share"/"device" (non-backslash chars).
+                while (i < path.Length && path[i] != '\\')
+                {
+                    current.Append(path[i]);
+                    i++;
+                }
+            }
+        }
+
+        // Flush the trailing segment (possibly empty if path ended with '\').
+        yield return current.ToString();
     }
 }
