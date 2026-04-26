@@ -4,6 +4,7 @@
 public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
 {
     private readonly bool[] _capturedButtons = new bool[Enum.GetNames<MouseButton>().Length];
+    private readonly HashSet<uint> _pointerIdsStartingInWebView = [];
     private readonly Dictionary<ulong, NavigationEventArgs> _navigationEvents = [];
     private ComObject<ICoreWebView2CompositionController>? _controller;
     private IComObject<ICoreWebView2CompositionController3>? _controller3;
@@ -11,9 +12,6 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     private ComObject<ICoreWebView2_3>? _webView;
     private bool _mouseTracking;
     private bool _isDropTarget;
-    private ulong _lastPointerDownTime;
-    private int _lastPointerDownPositionX = int.MinValue;
-    private int _lastPointerDownPositionY = int.MinValue;
     private WebView2.EventRegistrationToken _cursorChangedToken;
     private WebView2.EventRegistrationToken _navigationStarting;
     private WebView2.EventRegistrationToken _navigationCompleted;
@@ -540,116 +538,14 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                     msg == MessageDecoder.WM_MOUSEHWHEEL ? Orientation.Horizontal : Orientation.Vertical));
                 break;
 
-            case MessageDecoder.WM_POINTERHWHEEL:
-            case MessageDecoder.WM_POINTERWHEEL:
-                var pwe = new PointerWheelEventArgs(
-                    wParam.GetPointerId(),
-                    lParam.ToPOINT().ScreenToClient(hwnd),
-                    wParam.Value.SignedHIWORD(),
-                    msg == MessageDecoder.WM_POINTERHWHEEL ? Orientation.Horizontal : Orientation.Vertical);
-                OnPointerWheel(this, pwe);
-                if (!pwe.Handled)
-                {
-                    // send as mouse event
-                    var winfo = pwe.PointerInfo;
-                    var mwe = new MouseWheelEventArgs(pwe.Point, (MODIFIERKEYS_FLAGS)winfo.dwKeyStates, pwe.Delta, pwe.Orientation) { SourcePointerEvent = pwe };
-                    OnMouseWheel(mwe);
-                }
-                break;
-
-            case MessageDecoder.WM_POINTERENTER:
-                OnPointerEnter(this, new PointerEnterEventArgs(
-                    wParam.GetPointerId(),
-                    lParam.ToPOINT().ScreenToClient(hwnd),
-                    wParam.GetPointerFlags()));
-                break;
-
-            case MessageDecoder.WM_POINTERLEAVE:
-                OnPointerLeave(this, new PointerLeaveEventArgs(
-                    wParam.GetPointerId(),
-                    lParam.ToPOINT().ScreenToClient(hwnd),
-                    wParam.GetPointerFlags()));
-                break;
-
-            case MessageDecoder.WM_POINTERUPDATE:
-                var ppe = new PointerUpdateEventArgs(
-                    wParam.GetPointerId(),
-                    lParam.ToPOINT().ScreenToClient(hwnd),
-                    wParam.GetPointerFlags()
-                    );
-                OnPointerUpdate(this, ppe);
-                if (!ppe.Handled)
-                {
-                    // send as mouse event
-                    if (ppe.IsInContact)
-                    {
-                        OnMouseMove(new MouseEventArgs(ppe.Point, 0) { SourcePointerEvent = ppe });
-                    }
-                    else
-                    {
-                        OnMouseHover(this, new MouseEventArgs(ppe.Point, 0) { SourcePointerEvent = ppe });
-                    }
-                }
-                break;
-
+            case MessageDecoder.WM_POINTERACTIVATE:
             case MessageDecoder.WM_POINTERDOWN:
+            case MessageDecoder.WM_POINTERENTER:
+            case MessageDecoder.WM_POINTERLEAVE:
             case MessageDecoder.WM_POINTERUP:
-                var pce = new PointerContactChangedEventArgs(
-                    wParam.GetPointerId(),
-                    lParam.ToPOINT().ScreenToClient(hwnd),
-                    wParam.GetPointerFlags(),
-                    msg == MessageDecoder.WM_POINTERUP);
-                var info = pce.PointerInfo;
-                var isUp = msg == MessageDecoder.WM_POINTERUP;
-
-                // determine double click
-                if (!isUp)
-                {
-                    var cx = DirectN.Functions.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXDOUBLECLK);
-                    var cy = DirectN.Functions.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYDOUBLECLK);
-
-                    var pt = pce.Point;
-                    pce.IsDoubleClick = _lastPointerDownTime + DirectN.Functions.GetDoubleClickTime() * 10000 > info.PerformanceCount
-                        && Math.Abs(_lastPointerDownPositionX - pt.x) < cx
-                        && Math.Abs(_lastPointerDownPositionY - pt.y) < cy;
-
-                    if (!pce.IsDoubleClick)
-                    {
-                        _lastPointerDownPositionX = pt.x;
-                        _lastPointerDownPositionY = pt.y;
-                        _lastPointerDownTime = info.PerformanceCount;
-                    }
-                }
-
-                OnPointerContactChanged(this, pce);
-                if (!pce.Handled)
-                {
-                    // send as mouse event
-                    var mb = pce.MouseButton;
-                    if (!mb.HasValue)
-                    {
-                        // huh? which button then?
-                        Application.TraceWarning("msg: " + MessageDecoder.MsgToString(msg) + " unhandled");
-                        break;
-                    }
-
-                    var me = new MouseButtonEventArgs(pce.Point, (MODIFIERKEYS_FLAGS)info.dwKeyStates, mb.Value) { SourcePointerEvent = pce };
-                    if (pce.IsDoubleClick)
-                    {
-                        OnMouseButtonDoubleClick(me);
-                    }
-                    else
-                    {
-                        if (isUp)
-                        {
-                            OnMouseButtonUp(me);
-                        }
-                        else
-                        {
-                            OnMouseButtonDown(me);
-                        }
-                    }
-                }
+            case MessageDecoder.WM_POINTERUPDATE:
+                if (TryForwardPointerInput(msg, wParam, lParam))
+                    return 0;
                 break;
 
             case MessageDecoder.WM_CHAR:
@@ -681,6 +577,61 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                 break;
         }
         return base.WindowProc(hwnd, msg, wParam, lParam);
+    }
+
+    // from https://github.com/MicrosoftEdge/WebView2Samples/blob/main/SampleApps/WebView2APISample/ViewComponent.cpp
+    protected virtual bool TryForwardPointerInput(uint msg, WPARAM wParam, LPARAM lParam)
+    {
+        if (Controller == null)
+            return false;
+
+        var pointerId = wParam.GetPointerId();
+        var point = lParam.ToPOINT().ScreenToClient(Handle);
+        var pointerStartedInWebView = _pointerIdsStartingInWebView.Contains(pointerId);
+        if (!pointerStartedInWebView && !ClientRect.Contains(point))
+            return false;
+
+        if (!pointerStartedInWebView && (msg == MessageDecoder.WM_POINTERENTER || msg == MessageDecoder.WM_POINTERDOWN))
+        {
+            _pointerIdsStartingInWebView.Add(pointerId);
+        }
+        else if (msg == MessageDecoder.WM_POINTERLEAVE)
+        {
+            _pointerIdsStartingInWebView.Remove(pointerId);
+        }
+
+        var ctrl4 = Controller.As<ICoreWebView2ExperimentalCompositionController4>();
+        if (ctrl4 == null)
+            return false;
+
+        var matrix = D2D_MATRIX_4X4_F.Identity();
+        // this is needed to adjust pointer coordinates from screen to webview's root visual target, which may be different if the window is moved, etc.
+        //matrix._41 += webViewBounds left
+        //matrix._42 += m_webViewBounds top
+        if (ctrl4.Object.CreateCoreWebView2PointerInfoFromPointerId(pointerId, Handle, matrix, out var infoObj).IsError)
+            return false;
+
+        var info = new ComObject<ICoreWebView2PointerInfo>(infoObj);
+        Controller.Object.SendPointerInput((COREWEBVIEW2_POINTER_EVENT_KIND)msg, info.Object).ThrowOnError();
+        return true;
+    }
+
+    protected override bool OnMoving(ref RECT rc)
+    {
+        if (_controller?.Object is ICoreWebView2Controller c)
+        {
+            c.NotifyParentWindowPositionChanged().ThrowOnError();
+        }
+        return base.OnMoving(ref rc);
+    }
+
+    protected override bool OnMoved()
+    {
+        if (_controller?.Object is ICoreWebView2Controller c)
+        {
+            c.NotifyParentWindowPositionChanged().ThrowOnError();
+        }
+        return base.OnMoved();
     }
 
     protected override bool OnResized(WindowResizedType type, SIZE size)

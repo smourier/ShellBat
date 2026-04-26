@@ -217,8 +217,6 @@ public sealed partial class DotNet(ShellBatWindow window) : DispatchObject
         var asm = Assembly.GetExecutingAssembly();
         return $"<p style='font-family:monospace'>{Program.AppId} V{asm.GetInformationalVersion()}<br/>"
             + $"{asm.GetCopyright()}<br/><br/>"
-            + "<a center href=\"https://stackoverflow.com/users/403671/simon-mourier?tab=profile\"><img src=\"https://stackexchange.com/users/flair/174359.png\" width=\"208\" height=\"58\" alt=\"Profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\" title=\"profile for Simon Mourier at Stack Overflow, Q&amp;A for professional and enthusiast programmers\"></a>"
-            + "<br/>"
             + $"{Res.SourceCode}:<br/><a href='{url}'>{url}</a></p>";
     }
 
