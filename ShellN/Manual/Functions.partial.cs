@@ -26,4 +26,16 @@ public static partial class Functions
     [LibraryImport("Windows.Storage.dll")]
     [PreserveSig]
     public static partial HRESULT CreateStorageItemFromShellItem(nint item, in STORAGEITEM_FROM_SHELLITEM_CREATE_OPTIONS options, in Guid riid, out nint ppv);
+
+    [LibraryImport("Windows.Storage.dll", EntryPoint = "STORAGE_GetShellItemFromStorageItem")]
+    [PreserveSig]
+    public static partial HRESULT GetShellItemFromStorageItem(nint storageItem, in Guid riid, out nint ppv);
+
+    [LibraryImport("Windows.Storage.dll", EntryPoint = "STORAGE_CStorageItem_GetValidatedStorageItem")]
+    [PreserveSig]
+    public static partial HRESULT GetValidatedStorageItem(nint storageItem, in Guid riid, out nint ppv);
+
+    [LibraryImport("Windows.Storage.dll", EntryPoint = "STORAGE_CStorageItem_GetValidatedStorageItemObject")]
+    [PreserveSig]
+    public static partial HRESULT GetValidatedStorageItemObject(nint site, nint storageItem, in Guid riid, out nint ppv);
 }
