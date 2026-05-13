@@ -538,6 +538,11 @@ public static class System
     public static PROPERTYKEY IsGroup => new(new("c64a866e-41ae-4c8c-b3d5-dd6dbf70c9c1"), 100);
     
     /// <summary>
+    /// <b>System.IsHidden</b> of <b>VT_BOOL</b> type.
+    /// </summary>
+    public static PROPERTYKEY IsHidden => new(new("ce15d938-6671-4b62-9dba-60dca30f97a8"), 100);
+    
+    /// <summary>
     /// <b>System.IsIncomplete</b> of <b>VT_BOOL</b> type.
     /// </summary>
     public static PROPERTYKEY IsIncomplete => new(new("346c8bd1-2e6a-4c45-89a4-61b78e8e700f"), 100);
@@ -4680,6 +4685,14 @@ public static class System
         /// <b>System.Extensions.UsedCount</b> of <b>VT_I4</b> type.
         /// </summary>
         public static PROPERTYKEY UsedCount => new(new("3f5d9b45-5e9f-4d5c-8a5e-403181bf177b"), 4);
+    }
+    
+    public static class FileOperation
+    {
+        /// <summary>
+        /// <b>System.FileOperation.Title</b> of <b>VT_LPWSTR</b> type.
+        /// </summary>
+        public static PROPERTYKEY Title => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 100);
     }
     
     public static class Fonts
