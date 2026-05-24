@@ -9,7 +9,7 @@
       "DirectN.Extensions/1.6.2": {
         "dependencies": {
           "DirectNAot": "1.6.2",
-          "DirectN": "1.6.1.0"
+          "DirectN": "1.6.2.0"
         },
         "runtime": {
           "DirectN.Extensions.dll": {}
@@ -18,16 +18,16 @@
       "DirectNAot/1.6.2": {
         "runtime": {
           "DirectN.dll": {
-            "assemblyVersion": "1.6.1.0",
-            "fileVersion": "1.6.1.0"
+            "assemblyVersion": "1.6.2.0",
+            "fileVersion": "1.6.2.0"
           }
         }
       },
-      "DirectN/1.6.1.0": {
+      "DirectN/1.6.2.0": {
         "runtime": {
           "DirectN.dll": {
-            "assemblyVersion": "1.6.1.0",
-            "fileVersion": "1.6.1.0"
+            "assemblyVersion": "1.6.2.0",
+            "fileVersion": "1.6.2.0"
           }
         }
       }
@@ -44,7 +44,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "DirectN/1.6.1.0": {
+    "DirectN/1.6.2.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
