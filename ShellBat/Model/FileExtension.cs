@@ -299,7 +299,7 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
         ShellN.Functions.SHGetFileInfoW(PWSTR.From(extension), atts, (nint)(&info), (uint)sizeof(SHFILEINFOW), flags);
         if (info.hIcon != 0)
         {
-            bitmap = WicBitmapSource.FromHIcon(info.hIcon);
+            bitmap = WicBitmapSource.FromHICON(info.hIcon);
             if (bitmap != null)
             {
                 if (bitmap.PixelFormat != WicPixelFormat.GUID_WICPixelFormat32bppPBGRA)

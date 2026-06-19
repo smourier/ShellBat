@@ -250,7 +250,7 @@ public static class WindowsExtensions
 
         DirectN.Functions.PrintWindow(window.Handle, hdcMem, (PRINT_WINDOW_FLAGS)3);
 
-        var wic = WicBitmapSource.FromHBitmap(bmp);
+        var wic = WicBitmapSource.FromHBITMAP(bmp);
         DirectN.Functions.DeleteObject(new(bmp));
         DirectN.Functions.DeleteObject(new(hdcMem));
         _ = DirectN.Functions.ReleaseDC(window.Handle, hdc);

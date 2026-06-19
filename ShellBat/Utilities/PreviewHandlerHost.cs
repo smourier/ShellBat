@@ -187,7 +187,7 @@ public sealed partial class PreviewHandlerHost : IDisposable
             const int PW_RENDERFULLCONTENT = 2;
             DirectN.Functions.PrintWindow(Handle, hdcMem, PRINT_WINDOW_FLAGS.PW_CLIENTONLY | (PRINT_WINDOW_FLAGS)PW_RENDERFULLCONTENT);
 
-            var wic = WicBitmapSource.FromHBitmap(bmp);
+            var wic = WicBitmapSource.FromHBITMAP(bmp);
             DirectN.Functions.DeleteObject(new(bmp));
             DirectN.Functions.DeleteObject(new(hdcMem));
             _ = DirectN.Functions.ReleaseDC(Handle, hdc);

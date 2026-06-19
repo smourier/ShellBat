@@ -341,7 +341,7 @@ public partial class ShellBatHttpLocalServer : IDisposable
 
         try
         {
-            var bmp = WicBitmapSource.FromHIcon(icon);
+            var bmp = WicBitmapSource.FromHICON(icon);
             if (bmp != null)
             {
                 if (bmp.PixelFormat != WicPixelFormat.GUID_WICPixelFormat32bppPBGRA)
