@@ -2080,7 +2080,7 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreateMemoryPropertyStore(in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreateMemoryPropertyStore(in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatemultiplexpropertystore
     [LibraryImport("PROPSYS")]
@@ -3689,6 +3689,10 @@ public static partial class Functions
     [LibraryImport("WININET")]
     [PreserveSig]
     public static partial uint ShowClientAuthCerts(HWND hWndParent);
+    
+    [LibraryImport("KERNEL32")]
+    [PreserveSig]
+    public static partial int ShowConsoleCursor(HANDLE hConsoleOutput, BOOL bShow);
     
     // https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-showcursor
     [LibraryImport("USER32")]

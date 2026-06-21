@@ -4690,6 +4690,11 @@ public static class System
     public static class FileOperation
     {
         /// <summary>
+        /// <b>System.FileOperation.Target</b> of <b>VT_LPWSTR</b> type.
+        /// </summary>
+        public static PROPERTYKEY Target => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 101);
+        
+        /// <summary>
         /// <b>System.FileOperation.Title</b> of <b>VT_LPWSTR</b> type.
         /// </summary>
         public static PROPERTYKEY Title => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 100);

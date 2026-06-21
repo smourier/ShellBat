@@ -1009,6 +1009,8 @@ public static partial class Constants
     
     public static readonly Guid DestinationList = new("77f10cf0-3db5-4966-b520-b7c54fd35ed6");
     
+    public static readonly Guid DestinationListBoth = new("38fe0cf4-6a59-4729-8e4a-2d580059ede4");
+    
     public static readonly DEVPROPKEY DEVPKEY_MTPBTH_IsConnected = new(new(3927062522, 22685, 17522, 132, 228, 10, 190, 54, 253, 98, 239), 2);
     
     public const uint DEVSVC_SERVICEINFO_VERSION = 100;
@@ -1758,6 +1760,8 @@ public static partial class Constants
     public static readonly Guid FOLDERTYPEID_UserFiles = new("cd0fc69b-71e2-46e5-9690-5bcd9f57aab3");
     
     public static readonly Guid FOLDERTYPEID_UsersLibraries = new("c4d98f09-6124-4fe0-9942-826416082da9");
+    
+    public static readonly Guid FOLDERTYPEID_VersionControl = new("69f1e26b-ec64-4280-bc83-f1eb887ec35a");
     
     public static readonly Guid FOLDERTYPEID_Videos = new("5fa96407-7e77-483c-ac93-691d05850de8");
     
