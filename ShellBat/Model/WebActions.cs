@@ -49,7 +49,7 @@ public partial class WebActions(ShellBatWindow window, Entry entry) : DispatchOb
     }
 
     public IReadOnlyList<WebMenuItem> GetEntryActions() => window.GetEntryActions(entry);
-    public virtual void ExecuteAction(string id) => window.ExecuteAction([entry], id);
+    public virtual void ExecuteAction(string id) => window.ExecuteAction((Entry[])[entry], id);
 
     protected override object? GetTaskResult(Task task)
     {

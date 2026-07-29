@@ -4,7 +4,7 @@
 public partial class AudioViewer(Entry entry) : Viewer(entry)
 {
     public static IReadOnlyList<string> AudioFileExtensions => _audioFileExtensions.Value;
-    private static readonly Lazy<IReadOnlyList<string>> _audioFileExtensions = new(() => [.. FileExtension.GetMediaFileExtensions("audio")]);
+    private static readonly Lazy<IReadOnlyList<string>> _audioFileExtensions = new(() => (string[])[.. FileExtension.GetMediaFileExtensions("audio")]);
 
     public override int Priority => FileExtensionMatchPriority - 1;
     public override string? Icon => "fa-regular fa-file-audio";

@@ -8,12 +8,26 @@
 		<PublishAot>true</PublishAot>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Platforms>ARM64;x64;x86</Platforms>
+
+		<Version>1.0.0</Version>
+		<Authors>Simon Mourier</Authors>
+		<Copyright>Copyright (c) 2025-2026 Simon Mourier</Copyright>
+		<Description>AOT compatible, low level .NET bindings for the Windows Shell (COM interfaces, PIDLs, related Win32 APIs), built on DirectN. The friendly, object oriented API is in ShellN.Extensions.</Description>
+		<PackageId>ShellN</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/smourier/ShellBat</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/smourier/ShellBat</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>windows;shell;namespace;IShellItem;interop;AOT;DirectN;pidl</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Reference Include="DirectN">
-	    <HintPath>External\DirectN.dll</HintPath>
-	  </Reference>
+		<PackageReference Include="DirectNAot" Version="1.6.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>

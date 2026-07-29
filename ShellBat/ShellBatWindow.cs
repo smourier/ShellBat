@@ -1324,7 +1324,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 //Application.TraceInfo("Mount thread exiting");
             });
 
-            ShellItem.InvokeContextMenuVerb([idl], "mount");
+            ShellItem.InvokeContextMenuVerb((ItemIdList[])[idl], "mount");
         }
     }
 
@@ -1917,7 +1917,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
 
     public virtual void QuitAllInstances(bool includeThis = true)
     {
-        ShellBatInstance.QuitAllRemoteInstances([System.Environment.ProcessId]);
+        ShellBatInstance.QuitAllRemoteInstances((int[])[System.Environment.ProcessId]);
         if (includeThis)
         {
             Close();
@@ -1964,7 +1964,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
     {
         using var fsd = new FileSaveDialog();
         fsd.SetDefaultExtension(FileExtension.ShellBatExtensionName);
-        fsd.SetFileTypes([$"{Program.AppId} {Res.Instance} (*{FileExtension.ShellBatExtensionName})|*{FileExtension.ShellBatExtensionName}"]);
+        fsd.SetFileTypes((string[])[$"{Program.AppId} {Res.Instance} (*{FileExtension.ShellBatExtensionName})|*{FileExtension.ShellBatExtensionName}"]);
         fsd.SetTitle(Res.SaveInstance);
         if (!fsd.Show(Handle))
             return;
@@ -2007,7 +2007,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         {
             using var fod = new FileOpenDialog();
             fod.SetDefaultExtension(FileExtension.ShellBatThemeExtensionName);
-            fod.SetFileTypes([$"{Program.AppId} {Res.Theme} (*{FileExtension.ShellBatThemeExtensionName})|*{FileExtension.ShellBatThemeExtensionName}"]);
+            fod.SetFileTypes((string[])[$"{Program.AppId} {Res.Theme} (*{FileExtension.ShellBatThemeExtensionName})|*{FileExtension.ShellBatThemeExtensionName}"]);
             fod.SetTitle(Res.LoadTheme);
             if (!fod.Show(Handle))
                 return;
@@ -2042,7 +2042,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
     {
         using var fsd = new FileSaveDialog();
         fsd.SetDefaultExtension(FileExtension.ShellBatThemeExtensionName);
-        fsd.SetFileTypes([$"{Program.AppId} {Res.Theme} (*{FileExtension.ShellBatThemeExtensionName})|*{FileExtension.ShellBatThemeExtensionName}"]);
+        fsd.SetFileTypes((string[])[$"{Program.AppId} {Res.Theme} (*{FileExtension.ShellBatThemeExtensionName})|*{FileExtension.ShellBatThemeExtensionName}"]);
         fsd.SetTitle(Res.SaveInstance);
         if (!fsd.Show(Handle))
             return;
@@ -2414,7 +2414,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 return true;
 
             case nameof(ShellBatCommand.OpenTerminal):
-                OpenMenu(MenuId.AppActions, [Res.NewTerminal, Res.CommandPrompt]);
+                OpenMenu(MenuId.AppActions, (string[])[Res.NewTerminal, Res.CommandPrompt]);
                 return true;
 
             case nameof(ShellBatCommand.OpenHistory):

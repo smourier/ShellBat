@@ -123,7 +123,7 @@ public partial class LinesStream : IDisposable
     }
 #endif
 
-    public string? GetText(Line line) => GetTexts([line]).FirstOrDefault();
+    public string? GetText(Line line) => GetTexts((Line[])[line]).FirstOrDefault();
     public string? GetText(int lineIndex)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(lineIndex);

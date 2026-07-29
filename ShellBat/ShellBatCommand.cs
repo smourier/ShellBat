@@ -202,7 +202,7 @@ public class ShellBatCommand(string name)
 
         public Commands()
         {
-            AllCommands = [.. typeof(ShellBatCommand).GetProperties(BindingFlags.Public | BindingFlags.Static)
+            AllCommands = (ShellBatCommand[])[.. typeof(ShellBatCommand).GetProperties(BindingFlags.Public | BindingFlags.Static)
                 .Where(p => p.PropertyType == typeof(ShellBatCommand))
                 .Select(p => (ShellBatCommand)p.GetValue(null)!)
                 .Where(p => p.Key != null)];

@@ -63,7 +63,7 @@ public partial class ShellBatUpdateWindow : D2DRenderWindow
             endPoint = new D2D_POINT_2F { x = cr.Width - _padding, y = (cr.Height - 2 * _padding) / 2 },
         };
 
-        using var stops = renderTarget.CreateGradientStopCollection([
+        using var stops = renderTarget.CreateGradientStopCollection((D2D1_GRADIENT_STOP[])[
             new D2D1_GRADIENT_STOP { position = 0, color = D3DCOLORVALUE.Transparent },
             new D2D1_GRADIENT_STOP { position = _progress, color = _progressColor },
             new D2D1_GRADIENT_STOP { position = 1, color = D3DCOLORVALUE.Transparent},

@@ -4,7 +4,7 @@
 public partial class VideoViewer(Entry entry) : Viewer(entry)
 {
     public static IReadOnlyList<string> VideoFileExtensions => _videoFileExtensions.Value;
-    private static readonly Lazy<IReadOnlyList<string>> _videoFileExtensions = new(() => [.. FileExtension.GetMediaFileExtensions("video")]);
+    private static readonly Lazy<IReadOnlyList<string>> _videoFileExtensions = new(() => (string[])[.. FileExtension.GetMediaFileExtensions("video")]);
 
     public override int Priority => FileExtensionMatchPriority - 1;
     public override string? Icon => "fa-regular fa-file-video";

@@ -263,7 +263,7 @@ public partial class Entry : DispatchObject, IEquatable<Entry>
         return null;
     }
 
-    public IComObject<IDataObject>? CreateDataObject(bool throwOnError = true) => CreateDataObject([this], throwOnError);
+    public IComObject<IDataObject>? CreateDataObject(bool throwOnError = true) => CreateDataObject((Entry[])[this], throwOnError);
 
     public ItemIdList? GetIdList(bool throwOnError = true)
     {

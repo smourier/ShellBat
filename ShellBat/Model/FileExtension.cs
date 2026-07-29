@@ -30,7 +30,7 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
     ];
 
     // https://stackoverflow.com/a/77656328/403671
-    public static IReadOnlyList<string> CompressedWellKnownExtensions { get; } =
+    public static IReadOnlyList<string> CompressedWellKnownExtensions { get; } = (string[])
     [
         // windows built-in compressed types
         ".zip",
@@ -47,7 +47,7 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
         ".xz",
     ];
 
-    public static IReadOnlySet<string> TextWellKnownExtensions { get; } = new HashSet<string>(
+    public static IReadOnlySet<string> TextWellKnownExtensions { get; } = new HashSet<string>((string[])
     [
         ".appxmanifest",
         ".asax",
@@ -156,7 +156,7 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
         ".xslt",
     ]);
 
-    public static IReadOnlyList<string> CanBeDecompressedExtensions { get; } =
+    public static IReadOnlyList<string> CanBeDecompressedExtensions { get; } = (string[])
     [
         // known zip in disguised formats
         ".apk",
@@ -502,7 +502,7 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
             if (webView2NativeImageExtensions == null || webView2NativeImageExtensions.Count == 0)
                 return DefaultWebView2NativeImageExtensions;
 
-            return [.. webView2NativeImageExtensions];
+            return (string[])[.. webView2NativeImageExtensions];
         }
     }
 

@@ -195,18 +195,10 @@
 	</Target>
 
 	<ItemGroup>
-		<Reference Include="DirectN">
-			<HintPath>..\ShellN\External\DirectN.dll</HintPath>
-		</Reference>
-		<Reference Include="DirectN.Extensions">
-			<HintPath>..\ShellN\External\DirectN.Extensions.dll</HintPath>
-		</Reference>
-		<Reference Include="WebView2">
-			<HintPath>External\WebView2.dll</HintPath>
-		</Reference>
-		<Reference Include="WicNetCore">
-			<HintPath>External\WicNetCore.dll</HintPath>
-		</Reference>
+		<PackageReference Include="DirectNAot" Version="1.6.5" />
+		<PackageReference Include="DirectNAot.Extensions" Version="1.6.5" />
+		<PackageReference Include="WebView2Aot" Version="1.5.0" />
+		<PackageReference Include="WicNetCore" Version="1.9.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -229,6 +221,9 @@
 		<Using Include="ShellN" />
 		<Using Include="ShellN.Extensions" />
 		<Using Include="ShellN.Extensions.Utilities" />
+		<Using Include="ShellN.FILE_CREATION_DISPOSITION" Alias="FILE_CREATION_DISPOSITION" />
+		<Using Include="ShellN.FILE_FLAGS_AND_ATTRIBUTES" Alias="FILE_FLAGS_AND_ATTRIBUTES" />
+		<Using Include="ShellN.FILE_SHARE_MODE" Alias="FILE_SHARE_MODE" />
 		<Using Include="System" />
 		<Using Include="System.Buffers" />
 		<Using Include="System.Collections" />
@@ -307,8 +302,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Markdig" Version="1.3.2" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.9" />
-		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
 	</ItemGroup>
 
 	<Target Name="Win32Resources" BeforeTargets="BeforeBuild">

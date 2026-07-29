@@ -3,7 +3,7 @@
 [System.Runtime.InteropServices.Marshalling.GeneratedComClass]
 public partial class TextViewer(Entry entry) : Viewer(entry)
 {
-    public static IReadOnlyList<string> WellKnownTextFileNames { get; } =
+    public static IReadOnlyList<string> WellKnownTextFileNames { get; } = (string[])
     [
         "license",
         "readme",

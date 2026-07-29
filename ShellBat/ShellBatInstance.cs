@@ -774,7 +774,7 @@ public partial class ShellBatInstance : IShellBatInstance, IDisposable
 
         // do the update: copy the current executable to a temp file and start it with the update argument
         // the restarted one will call this instance to quit and replace the executable
-        QuitAllRemoteInstances([proc.Id]);
+        QuitAllRemoteInstances((int[])[proc.Id]);
 
         Application.TraceVerbose($"Updater instance started with process id {proc.Id}.");
         return true;

@@ -252,10 +252,10 @@ public sealed partial class DotNet(ShellBatWindow window) : DispatchObject
             if (current is null)
                 return null;
 
-            return window.GetContextMenu([current.ParsingName]);
+            return window.GetContextMenu((string[])[current.ParsingName]);
         }
 
-        return window.GetContextMenu([.. list.OfType<string>().WhereNotNull()]);
+        return window.GetContextMenu((string[])[.. list.OfType<string>().WhereNotNull()]);
     }
 
     public string? RenameEntry(string parsingName, string newName)
@@ -286,7 +286,7 @@ public sealed partial class DotNet(ShellBatWindow window) : DispatchObject
             if (current is null)
                 return;
 
-            window.ExecuteAction([current.ParsingName], actionId);
+            window.ExecuteAction((string?[])[current.ParsingName], actionId);
             return;
         }
 

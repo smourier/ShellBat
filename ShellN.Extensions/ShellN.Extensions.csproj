@@ -8,14 +8,30 @@
 		<IsAotCompatible>true</IsAotCompatible>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Platforms>ARM64;x64;x86</Platforms>
+
+		<Version>1.0.0</Version>
+		<Authors>Simon Mourier</Authors>
+		<Copyright>Copyright (c) 2025-2026 Simon Mourier</Copyright>
+		<Description>A friendly, AOT compatible thin managed layer over some of the Windows Shell namespace APIs, on top of ShellN. Browse and operate the shell as objects with ShellItem, ShellFolder and KnownFolder, invoke the real context menu, read property stores, and watch for shell changes.</Description>
+		<PackageId>ShellN.Extensions</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/smourier/ShellBat</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/smourier/ShellBat</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>windows;shell;namespace;IShellItem;ShellItem;context-menu;AOT;DirectN</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="..\ShellN\Properties\AssemblyVersionInfo.cs" Link="Properties\AssemblyVersionInfo.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.IO.Hashing" Version="10.0.9" />
+		<PackageReference Include="System.IO.Hashing" Version="10.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -23,12 +39,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="DirectN">
-			<HintPath>..\ShellN\External\DirectN.dll</HintPath>
-		</Reference>
-		<Reference Include="DirectN.Extensions">
-			<HintPath>..\ShellN\External\DirectN.Extensions.dll</HintPath>
-		</Reference>
+		<PackageReference Include="DirectNAot" Version="1.6.5" />
+		<PackageReference Include="DirectNAot.Extensions" Version="1.6.5" />
 	</ItemGroup>
 
 	<ItemGroup>

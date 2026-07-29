@@ -177,7 +177,7 @@ public class CommandKey(VirtualKey key) : IEquatable<CommandKey>
             // support "Ctrl + VK_K" notation
             if (Enum.TryParse<VIRTUAL_KEY>(lastPart, true, out var vkEnum))
             {
-                vk = [vkEnum];
+                vk = (VIRTUAL_KEY[])[vkEnum];
             }
             else
                 return null;
