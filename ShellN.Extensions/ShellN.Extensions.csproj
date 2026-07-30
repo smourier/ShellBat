@@ -7,9 +7,8 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<IsAotCompatible>true</IsAotCompatible>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<Platforms>ARM64;x64;x86</Platforms>
 
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>Simon Mourier</Authors>
 		<Copyright>Copyright (c) 2025-2026 Simon Mourier</Copyright>
 		<Description>A friendly, AOT compatible thin managed layer over some of the Windows Shell namespace APIs, on top of ShellN. Browse and operate the shell as objects with ShellItem, ShellFolder and KnownFolder, invoke the real context menu, read property stores, and watch for shell changes.</Description>

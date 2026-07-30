@@ -102,10 +102,6 @@ public partial class DetailsViewer(Entry entry) : Viewer(entry)
             if (canonicalName == null)
                 continue;
 
-            if (canonicalName.Contains("BestShortcut"))
-            {
-            }
-
             if (!IncludeProperty(desc))
                 continue;
 
