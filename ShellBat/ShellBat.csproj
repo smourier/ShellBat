@@ -26,9 +26,9 @@
 		<PackageTags>File Explorer;File Manager;File Browser;File Viewer;Terminal;Terminal Emulator;Markdown Viewer;Image Viewer;Video Player;Audio Player;PDF Viewer</PackageTags>
 		<Copyright>Copyright (C) 2024-$([System.DateTime]::UtcNow.ToString("yyyy")) Simon Mourier. All rights reserved.</Copyright>
 		<Description>ShellBat</Description>
-		<ProductVersion>1.1.0.0</ProductVersion>
-		<FileVersion>1.1.0.0</FileVersion>
-		<InformationalVersion>1.1.0.0</InformationalVersion>
+		<ProductVersion>1.1.1.0</ProductVersion>
+		<FileVersion>1.1.1.0</FileVersion>
+		<InformationalVersion>1.1.1.0</InformationalVersion>
 		<SourceRevisionId>$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
 
 	</PropertyGroup>
@@ -274,10 +274,6 @@
 
 		<Using Alias="IGraphicsEffectD2D1Interop" Include="Windows.Graphics.Effects.IGraphicsEffectD2D1Interop" />
 
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="External\" />
 	</ItemGroup>
 
 	<ItemGroup>

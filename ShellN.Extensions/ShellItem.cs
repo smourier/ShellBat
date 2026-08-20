@@ -628,7 +628,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
                 return hr;
             }
 
-            Application.TraceVerbose($"ShellFolder2 GetUIObjectOf riid:" + riid.ToString("B"));
+            //Application.TraceVerbose($"ShellFolder2 GetUIObjectOf riid:" + riid.ToString("B"));
             return DirectN.Constants.E_NOINTERFACE;
         }
 
