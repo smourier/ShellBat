@@ -276,14 +276,14 @@ public partial class ShellBatHttpLocalServer : IDisposable
 
     private static async Task<WicBitmapSource?> GetPdfPageImage(PdfRenderer renderer, string parsingName, int localId, PdfRenderOptions options)
     {
-        Application.TraceInfo($"Serving PDF page image from local document for '{parsingName}' (local id {localId}) size:{options.Width}");
+        //Application.TraceInfo($"Serving PDF page image from local document for '{parsingName}' (local id {localId}) size:{options.Width}");
         if (localId > 0)
         {
             var doc = PdfViewer.GetDocument(localId);
             if (doc != null)
             {
                 var bmpLocal = renderer.RenderPdfPage(doc, options);
-                Application.TraceInfo($"bmp:{bmpLocal?.Width}");
+                //Application.TraceInfo($"bmp:{bmpLocal?.Width}");
                 if (bmpLocal == null)
                 {
                     ShellBatInstance.LogWarning($"Could not get PDF page image for '{parsingName}' (local id {localId})");
@@ -302,7 +302,7 @@ public partial class ShellBatHttpLocalServer : IDisposable
 
     private static Task<WicBitmapSource?> GetAssocHandlerIcon(string ext, string key, SHIL shil, IMAGE_LIST_DRAW_STYLE flags)
     {
-        Application.TraceInfo($"Serving asso handler icon for ext '{ext}' key '{key}' shil {shil} flags {flags}");
+        //Application.TraceInfo($"Serving asso handler icon for ext '{ext}' key '{key}' shil {shil} flags {flags}");
         var fext = FileExtension.GetByExtension(ext);
         if (fext == null)
         {

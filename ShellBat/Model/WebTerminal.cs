@@ -152,15 +152,15 @@ public partial class WebTerminal : DispatchObject, IDisposable
         {
             if (Settings.Current.CloseExitedTerminalProcesses)
             {
-                Application.TraceInfo("Process exited");
+                //Application.TraceInfo("Process exited");
                 Dispose();
             }
             else
             {
-                Application.TraceInfo("Process exited, notifying webview");
+                //Application.TraceInfo("Process exited, notifying webview");
                 var text = string.Format(Res.ProcessExited, ProcessName ?? terminal.Process?.ProcessId.ToString());
                 WriteProcessExitedToWebView(text);
-                Application.TraceInfo("Notified webview of process exit");
+                //Application.TraceInfo("Notified webview of process exit");
             }
         };
 
@@ -203,7 +203,7 @@ public partial class WebTerminal : DispatchObject, IDisposable
 
     public virtual void OnResize(int cols, int rows)
     {
-        Application.TraceInfo($"Resize: {cols} x {rows}");
+        //Application.TraceInfo($"Resize: {cols} x {rows}");
         _terminal?.Console.Resize((short)cols, (short)rows);
     }
 

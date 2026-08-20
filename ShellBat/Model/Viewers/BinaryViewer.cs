@@ -87,7 +87,7 @@ public partial class BinaryViewer(Entry entry) : Viewer(entry)
 
     public virtual string? GetText(int startLine, int countLines)
     {
-        Application.TraceVerbose($"BinaryViewer.GetText(startLine={startLine}, countLines={countLines})");
+        //Application.TraceVerbose($"BinaryViewer.GetText(startLine={startLine}, countLines={countLines})");
         if (countLines <= 0)
         {
             countLines = 1;

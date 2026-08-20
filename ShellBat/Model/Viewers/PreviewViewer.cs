@@ -196,7 +196,7 @@ public partial class PreviewViewer(Entry entry) : Viewer(entry), IPreviewHandler
         foreach (var process in Process.GetProcessesByName(name))
         {
             var cmdLine = process.GetCommandLine();
-            Application.TraceWarning($"PH process '{process.ProcessName}' (Id: {process.Id}) cmdLine: {cmdLine}");
+            // Application.TraceWarning($"PH process '{process.ProcessName}' (Id: {process.Id}) cmdLine: {cmdLine}");
             if (cmdLine == null)
                 continue;
 
@@ -207,7 +207,7 @@ public partial class PreviewViewer(Entry entry) : Viewer(entry), IPreviewHandler
             {
                 process.Kill();
                 count++;
-                Application.TraceWarning($"PH process '{process.ProcessName}' (Id: {process.Id}) cmdLine: {cmdLine} was killed.");
+                //Application.TraceWarning($"PH process '{process.ProcessName}' (Id: {process.Id}) cmdLine: {cmdLine} was killed.");
             }
             catch (Exception ex)
             {
@@ -269,14 +269,14 @@ public partial class PreviewViewer(Entry entry) : Viewer(entry), IPreviewHandler
 
     HRESULT IPreviewHandlerFrame.GetWindowContext(out PREVIEWHANDLERFRAMEINFO info)
     {
-        Application.TraceVerbose("GetWindowContext called");
+        //Application.TraceVerbose("GetWindowContext called");
         info = new PREVIEWHANDLERFRAMEINFO();
         return DirectN.Constants.S_OK;
     }
 
     HRESULT IPreviewHandlerFrame.TranslateAccelerator(in MSG msg)
     {
-        Application.TraceVerbose($"msg:{MessageDecoder.Decode(msg)}");
+        //Application.TraceVerbose($"msg:{MessageDecoder.Decode(msg)}");
         return DirectN.Constants.S_FALSE;
     }
 

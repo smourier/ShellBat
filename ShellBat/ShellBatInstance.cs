@@ -762,7 +762,7 @@ public partial class ShellBatInstance : IShellBatInstance, IDisposable
             Arguments = $"/{Program.UpdateArgumentName}:{_updateAuthId}",
         };
 
-        Application.TraceVerbose($"Starting updater instance '{path}' with auth id '{_updateAuthId}'.");
+        //Application.TraceVerbose($"Starting updater instance '{path}' with auth id '{_updateAuthId}'.");
         var proc = Process.Start(info);
         if (proc == null)
         {
@@ -776,7 +776,7 @@ public partial class ShellBatInstance : IShellBatInstance, IDisposable
         // the restarted one will call this instance to quit and replace the executable
         QuitAllRemoteInstances((int[])[proc.Id]);
 
-        Application.TraceVerbose($"Updater instance started with process id {proc.Id}.");
+        //Application.TraceVerbose($"Updater instance started with process id {proc.Id}.");
         return true;
     }
 

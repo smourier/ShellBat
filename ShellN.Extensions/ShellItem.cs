@@ -641,13 +641,13 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         public HRESULT QueryService(in Guid guidService, in Guid riid, out nint ppvObject)
         {
             ppvObject = DirectN.Extensions.Com.ComObject.GetOrCreateComInstance(this, riid, CreateComInterfaceFlags.None);
-            Application.TraceInfo("ShellFolder2 guidService:" + guidService.ToString("B") + " riid:" + riid.ToString("B") + " ppv:" + ppvObject);
+            //Application.TraceInfo("ShellFolder2 guidService:" + guidService.ToString("B") + " riid:" + riid.ToString("B") + " ppv:" + ppvObject);
             return ppvObject == 0 ? DirectN.Constants.E_NOINTERFACE : DirectN.Constants.S_OK;
         }
 
         public CustomQueryInterfaceResult GetInterface(ref Guid iid, out nint ppv)
         {
-            Application.TraceInfo("ShellFolder2 iid:" + iid.ToString("B"));
+            //Application.TraceInfo("ShellFolder2 iid:" + iid.ToString("B"));
             ppv = 0;
             return CustomQueryInterfaceResult.NotHandled;
         }
@@ -667,13 +667,13 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         public HRESULT BeforeCoCreateInstance(in Guid clsidHandler, IShellItemArray itemsBeingActivated, IHandlerInfo handlerInfo)
         {
-            Application.TraceVerbose($"ShellFolder2 clsidHandler: {clsidHandler:B}");
+            //Application.TraceVerbose($"ShellFolder2 clsidHandler: {clsidHandler:B}");
             return 0;
         }
 
         public HRESULT BeforeCreateProcess(PWSTR applicationPath, PWSTR commandLine, IHandlerInfo handlerInfo)
         {
-            Application.TraceVerbose($"ShellFolder2 applicationPath: {applicationPath}");
+            //Application.TraceVerbose($"ShellFolder2 applicationPath: {applicationPath}");
             return 0;
         }
     }

@@ -114,7 +114,7 @@ public sealed partial class PreviewHandlerHost : IDisposable
 
         public async Task<WicBitmapSource?> Preview(Entry entry, PreviewHandlerOptions options)
         {
-            Application.TraceVerbose($"Previewing {entry.ParsingName}");
+            //Application.TraceVerbose($"Previewing {entry.ParsingName}");
             var sw = Stopwatch.StartNew();
             using var handler = Handler.Create(entry);
             if (handler == null)
@@ -151,7 +151,7 @@ public sealed partial class PreviewHandlerHost : IDisposable
 
             // let the preview handler render during a bit of time (PDF with Adobe does that for example)
             var bmp = await Task.Run(() => CaptureGdi(options));
-            Application.TraceInfo($"Preview '{entry!.ParsingName}' ran {sw.Elapsed}");
+            //Application.TraceInfo($"Preview '{entry!.ParsingName}' ran {sw.Elapsed}");
             Dispose();
             return bmp;
         }
@@ -191,7 +191,7 @@ public sealed partial class PreviewHandlerHost : IDisposable
             DirectN.Functions.DeleteObject(new(bmp));
             DirectN.Functions.DeleteObject(new(hdcMem));
             _ = DirectN.Functions.ReleaseDC(Handle, hdc);
-            Application.TraceInfo($"Bmp size:{wic?.Size.width} x {wic?.Size.height}.");
+            //Application.TraceInfo($"Bmp size:{wic?.Size.width} x {wic?.Size.height}.");
             return wic;
         }
     }
@@ -316,14 +316,14 @@ public sealed partial class PreviewHandlerHost : IDisposable
 
         HRESULT IPreviewHandlerFrame.GetWindowContext(out PREVIEWHANDLERFRAMEINFO pinfo)
         {
-            Application.TraceInfo("GetWindowContext called");
+            //Application.TraceInfo("GetWindowContext called");
             pinfo = new PREVIEWHANDLERFRAMEINFO();
             return DirectN.Constants.S_OK;
         }
 
         HRESULT IPreviewHandlerFrame.TranslateAccelerator(in MSG pmsg)
         {
-            Application.TraceInfo($"msg:{MessageDecoder.Decode(pmsg)}");
+            //Application.TraceInfo($"msg:{MessageDecoder.Decode(pmsg)}");
             return DirectN.Constants.S_FALSE;
         }
 
