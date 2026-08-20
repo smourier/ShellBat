@@ -11,3 +11,5 @@ It lets you browse and operate the shell as objects rather than paths, so you re
 * get a stream for an item, so its content can be read even when it is not a plain file.
 * invoke the real Windows context menu and its verbs.
 * watch the shell for changes with ChangeNotifier.
+
+Available as a Nuget package here: https://www.nuget.org/packages/ShellN.Extensions
