@@ -600,21 +600,24 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return Functions.SHInvokeCommand(hwnd, shellFolder.Object, child, PWSTR.From(verb));
     }
 
-    public void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public virtual void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
     {
         using var pidl = GetIdList(false);
         if (pidl is null)
             return;
 
-        ShowContextMenu([pidl], site, context, flags);
+        using var parent = GetParentIdList();
+        if (parent is null)
+            return;
+
+        ShowContextMenu(parent, [pidl], site, context, flags);
     }
 
-    public static void ShowContextMenu(IEnumerable<ItemIdList> list, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public static void ShowContextMenu(ItemIdList folderIdList, IEnumerable<ItemIdList> list, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
     {
+        ArgumentNullException.ThrowIfNull(folderIdList);
         ArgumentNullException.ThrowIfNull(list);
         var array = list.ToArray();
-        if (array.Length == 0)
-            return;
 
         DirectN.Functions.GetCursorPos(out var cursor);
 
@@ -628,28 +631,35 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
             window2.GetWindow(out hwnd);
         }
 
-        // note this code presumes all items are in the same folder, which is usually the case
-        // the first item is used to get the folder
-        // if the items are in different folders, the context menu result is undefined
-        using var first = FromPidl(array[0].Pointer);
-        if (first == null)
+        using var folder = FromPidl(folderIdList.Pointer);
+        if (folder == null)
             return;
 
-        using var firstFolder = first.GetParent();
-        if (firstFolder == null)
-            return;
-
-        var relativePidls = new nint[array.Length];
-        for (var i = 0; i < array.Length; i++)
-        {
-            relativePidls[i] = array[i].RelativePointer;
-        }
-
-        using var shellFolder = firstFolder.BindToHandler<IShellFolder>(Constants.BHID_SFObject, context);
+        using var shellFolder = folder.BindToHandler<IShellFolder2>(Constants.BHID_SFObject, context);
         if (shellFolder == null)
             return;
 
-        shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), relativePidls, typeof(IContextMenu).GUID, 0, out var unk);
+        // note this code presumes all items are in the same folder, which is usually the case, otherwise we skip items that are not in the folder
+        var relativePidls = new List<nint>();
+        for (var i = 0; i < array.Length; i++)
+        {
+            // no need to free VARIANT for Size
+            if (shellFolder.Object.GetDetailsEx(array[i].RelativePointer, PropertyKeys.System.Size, out var name).IsError)
+                continue;
+
+            relativePidls.Add(array[i].RelativePointer);
+        }
+
+        nint unk;
+        if (relativePidls.Count == 0)
+        {
+            shellFolder.Object.CreateViewObject(hwnd, typeof(IContextMenu).GUID, out unk);
+        }
+        else
+        {
+            shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), [.. relativePidls], typeof(IContextMenu).GUID, 0, out unk);
+        }
+
         using var cm = DirectN.Extensions.Com.ComObject.FromPointer<IContextMenu>(unk);
         if (cm == null)
             return;
@@ -672,15 +682,16 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         if (menu.Value == 0)
             return;
 
+        const uint firstCommandId = 1;
         try
         {
-            if (cm.Object.QueryContextMenu(menu, 0, 0, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
+            if (cm.Object.QueryContextMenu(menu, 0, firstCommandId, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
                 return;
 
             var id = Functions.TrackPopupMenu(menu, TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD, cursor.x, cursor.y, 0, hwnd, 0);
             if (id != 0)
             {
-                var hr = Invoke(cm.Object, hwnd, null, id);
+                var hr = Invoke(cm.Object, hwnd, null, id - (int)firstCommandId);
             }
         }
         finally
@@ -787,9 +798,10 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         if (menu.Value == 0)
             return DirectN.Constants.E_OUTOFMEMORY;
 
+        const uint firstCommandId = 1;
         try
         {
-            if (cm.Object.QueryContextMenu(menu, 0, 0, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
+            if (cm.Object.QueryContextMenu(menu, 0, firstCommandId, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
                 return DirectN.Constants.E_FAIL;
 
             return Invoke(cm.Object, hwnd, verb, 0);

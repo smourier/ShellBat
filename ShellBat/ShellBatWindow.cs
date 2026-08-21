@@ -1075,7 +1075,11 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                         }
                     }
 
-                    ShellItem.ShowContextMenu(list, _site, flags: CMF.CMF_EXPLORE | CMF.CMF_EXTENDEDVERBS | CMF.CMF_CANRENAME);
+                    using var currentIdList = CurrentEntry?.GetIdList(false);
+                    if (currentIdList is not null)
+                    {
+                        ShellItem.ShowContextMenu(currentIdList, list, _site, flags: CMF.CMF_EXPLORE | CMF.CMF_EXTENDEDVERBS | CMF.CMF_CANRENAME);
+                    }
                 }
                 finally
                 {
