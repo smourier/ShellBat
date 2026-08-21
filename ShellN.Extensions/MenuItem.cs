@@ -121,8 +121,9 @@ public class MenuItem : IDisposable
         }
     }
 
-    private static string? GetCommandString(IContextMenu2 cm, uint itemId)
+    public static string? GetCommandString(IContextMenu cm, uint itemId)
     {
+        ArgumentNullException.ThrowIfNull(cm);
         // avoid crashes with invalid item IDs
         if (itemId > short.MaxValue || itemId < 0)
             return null;

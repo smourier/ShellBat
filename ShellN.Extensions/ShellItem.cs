@@ -600,20 +600,30 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return Functions.SHInvokeCommand(hwnd, shellFolder.Object, child, PWSTR.From(verb));
     }
 
-    public virtual void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public virtual HRESULT ShowContextMenu(
+        object? site = null,
+        IComObject<IBindCtx>? context = null,
+        CMF flags = CMF.CMF_NORMAL,
+        Func<IContextMenu, HWND, uint, HRESULT>? invoke = null)
     {
         using var pidl = GetIdList(false);
         if (pidl is null)
-            return;
+            return DirectN.Constants.E_FAIL;
 
         using var parent = GetParentIdList();
         if (parent is null)
-            return;
+            return DirectN.Constants.E_FAIL;
 
-        ShowContextMenu(parent, [pidl], site, context, flags);
+        return ShowContextMenu(parent, [pidl], site, context, flags, invoke);
     }
 
-    public static void ShowContextMenu(ItemIdList folderIdList, IEnumerable<ItemIdList> list, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public static HRESULT ShowContextMenu(
+        ItemIdList folderIdList,
+        IEnumerable<ItemIdList> list,
+        object? site = null,
+        IComObject<IBindCtx>? context = null,
+        CMF flags = CMF.CMF_NORMAL,
+        Func<IContextMenu, HWND, uint, HRESULT>? invoke = null)
     {
         ArgumentNullException.ThrowIfNull(folderIdList);
         ArgumentNullException.ThrowIfNull(list);
@@ -633,11 +643,11 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         using var folder = FromPidl(folderIdList.Pointer);
         if (folder == null)
-            return;
+            return DirectN.Constants.E_FAIL;
 
         using var shellFolder = folder.BindToHandler<IShellFolder2>(Constants.BHID_SFObject, context);
         if (shellFolder == null)
-            return;
+            return DirectN.Constants.E_NOINTERFACE;
 
         // note this code is a bit special because Explorer is not consistent
         // sometimes it needs the relative pidls to be valid (ie: are children of folder)
@@ -683,11 +693,11 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         using var cm = DirectN.Extensions.Com.ComObject.FromPointer<IContextMenu>(unk);
         if (cm == null)
-            return;
+            return DirectN.Constants.E_NOINTERFACE;
 
         var cm2 = cm.As<IContextMenu2>();
         if (cm2 == null)
-            return;
+            return DirectN.Constants.E_NOINTERFACE;
 
         DirectN.Extensions.Com.ComObject.WithComInstance(cm2, unk =>
         {
@@ -701,19 +711,24 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         var menu = Functions.CreatePopupMenu();
         if (menu.Value == 0)
-            return;
+            return DirectN.Constants.E_FAIL;
 
         const uint firstCommandId = 1;
         try
         {
-            if (cm.Object.QueryContextMenu(menu, 0, firstCommandId, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
-                return;
+            var hr = cm.Object.QueryContextMenu(menu, 0, firstCommandId, Constants.FCIDM_SHVIEWLAST, (uint)flags);
+            if (hr.IsError)
+                return hr;
 
             var id = Functions.TrackPopupMenu(menu, TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD, cursor.x, cursor.y, 0, hwnd, 0);
             if (id != 0)
             {
-                var hr = Invoke(cm.Object, hwnd, null, id - (int)firstCommandId);
+                if (invoke != null)
+                    return invoke(cm.Object, hwnd, (uint)id);
+
+                return Invoke(cm.Object, hwnd, (uint)(id - (int)firstCommandId));
             }
+            return DirectN.Constants.S_OK;
         }
         finally
         {
@@ -837,8 +852,17 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         }
     }
 
-    private static unsafe HRESULT Invoke(IContextMenu cm, HWND hwnd, string? verb, int id)
+    public static HRESULT Invoke(IContextMenu cm, HWND hwnd, uint id) => Invoke(cm, hwnd, null, id);
+    public static HRESULT Invoke(IContextMenu cm, HWND hwnd, string verb)
     {
+        ArgumentNullException.ThrowIfNull(verb);
+        return Invoke(cm, hwnd, verb, 0);
+    }
+
+    private static unsafe HRESULT Invoke(IContextMenu cm, HWND hwnd, string? verb, uint id)
+    {
+        ArgumentNullException.ThrowIfNull(cm);
+
         var mask = CMIC.CMIC_MASK_UNICODE | CMIC.CMIC_MASK_PTINVOKE;
         var info = new CMINVOKECOMMANDINFOEX
         {
@@ -868,8 +892,8 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         }
         else
         {
-            info.lpVerb = new PSTR(id);
-            info.lpVerbW = new PWSTR(id);
+            info.lpVerb = new PSTR((int)id);
+            info.lpVerbW = new PWSTR((int)id);
         }
 
         return cm.InvokeCommand(Unsafe.AsRef<CMINVOKECOMMANDINFO>((CMINVOKECOMMANDINFO*)&info));

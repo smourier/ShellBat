@@ -39,13 +39,17 @@ public sealed class ShellFolder : ShellItem
         }
     }
 
-    public override void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public override HRESULT ShowContextMenu(
+        object? site = null,
+        IComObject<IBindCtx>? context = null,
+        CMF flags = CMF.CMF_NORMAL,
+        Func<IContextMenu, HWND, uint, HRESULT>? invoke = null)
     {
         using var idl = GetIdList();
         if (idl is null)
-            return;
+            return DirectN.Constants.E_FAIL;
 
-        ShowContextMenu(idl, [], site, context, flags);
+        return ShowContextMenu(idl, [], site, context, flags, invoke);
     }
 
     public HRESULT RenameItem(ShellItem item, string newName, _TRANSFER_SOURCE_FLAGS flags = _TRANSFER_SOURCE_FLAGS.TSF_NORMAL, bool throwOnError = true)
