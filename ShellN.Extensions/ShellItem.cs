@@ -639,14 +639,15 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         if (shellFolder == null)
             return;
 
-        // note this code presumes all items are in the same folder, which is usually the case, otherwise we skip items that are not in the folder
+        // note this code is a bit special because Explorer is not consistent
+        // sometimes it needs the relative pidls to be valid (ie: are children of folder)
+        // sometimes it not only need the relative pidls to be valid but it wants them (ex: folders under My PC)
+        // so we do it in two passes
+        // 1) try with all relative pidls. If it succeeds, ok (case of folders under My PC and others)
+        // 2) if it fails, try with only the relative pidls that are children of folder
         var relativePidls = new List<nint>();
         for (var i = 0; i < array.Length; i++)
         {
-            // no need to free VARIANT for Size
-            if (shellFolder.Object.GetDetailsEx(array[i].RelativePointer, PropertyKeys.System.Size, out var name).IsError)
-                continue;
-
             relativePidls.Add(array[i].RelativePointer);
         }
 
@@ -657,7 +658,27 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         }
         else
         {
-            shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), [.. relativePidls], typeof(IContextMenu).GUID, 0, out unk);
+            if (shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), [.. relativePidls], typeof(IContextMenu).GUID, 0, out unk).IsError)
+            {
+                relativePidls.Clear();
+                for (var i = 0; i < array.Length; i++)
+                {
+                    // no need to free VARIANT for Size
+                    if (shellFolder.Object.GetDetailsEx(array[i].RelativePointer, PropertyKeys.System.Size, out var name).IsError)
+                        continue;
+
+                    relativePidls.Add(array[i].RelativePointer);
+                }
+
+                if (relativePidls.Count == 0)
+                {
+                    shellFolder.Object.CreateViewObject(hwnd, typeof(IContextMenu).GUID, out unk);
+                }
+                else
+                {
+                    shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), [.. relativePidls], typeof(IContextMenu).GUID, 0, out unk);
+                }
+            }
         }
 
         using var cm = DirectN.Extensions.Com.ComObject.FromPointer<IContextMenu>(unk);
