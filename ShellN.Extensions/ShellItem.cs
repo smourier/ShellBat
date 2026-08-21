@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.Marshalling;
-
-namespace ShellN.Extensions;
+﻿namespace ShellN.Extensions;
 
 public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbsoluteIdList
 {
@@ -183,7 +181,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         foreach (var item in items)
         {
-            var parentIdl = item.GetParentAndItemIdLists(out var itemIdl, throwOnError);
+            var parentIdl = item.GetParentAndItemIdList(out var itemIdl, throwOnError);
             if (parentIdl is null || itemIdl is null)
                 continue;
 
@@ -391,7 +389,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return new ItemIdList(parentPidl, true);
     }
 
-    public unsafe ItemIdList? GetParentAndItemIdLists(out ItemIdList? itemRelativeIdList, bool throwOnError = false)
+    public unsafe ItemIdList? GetParentAndItemIdList(out ItemIdList? itemRelativeIdList, bool throwOnError = false)
     {
         itemRelativeIdList = null;
         nint parentPidl = 0;
@@ -405,6 +403,16 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
             itemRelativeIdList = new ItemIdList(childPidl, true);
         }
         return parentPidl != 0 ? new ItemIdList(parentPidl, true) : null;
+    }
+
+    public unsafe ItemIdList? GetItemRelativeIdList(bool throwOnError = false)
+    {
+        nint childPidl = 0;
+        var hr = ((IParentAndItem)NativeObject).GetParentAndItem(0, 0, (nint)(&childPidl)).ThrowOnError(throwOnError);
+        if (hr.IsError)
+            return null;
+
+        return childPidl != 0 ? new ItemIdList(childPidl, true) : null;
     }
 
     [MemberNotNull(nameof(_fastPropertiesPropertyStore))]
@@ -571,7 +579,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
     }
 
     public HRESULT InvokeCommand(string? verb, bool throwOnError = true) => InvokeCommand(verb, HWND.Null, throwOnError);
-    public virtual unsafe HRESULT InvokeCommand(string? verb, HWND hwnd, bool throwOnError = true)
+    public virtual HRESULT InvokeCommand(string? verb, HWND hwnd, bool throwOnError = true)
     {
         if (ComObject.Object is not IParentAndItem pai)
             return DirectN.Constants.E_NOINTERFACE.ThrowOnError(throwOnError);
@@ -592,93 +600,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return Functions.SHInvokeCommand(hwnd, shellFolder.Object, child, PWSTR.From(verb));
     }
 
-    [GeneratedComClass]
-    private partial class ShellFolder2(HWND hwnd) :
-        IShellFolder,
-        IPersistIDList,
-        DirectN.IServiceProvider,
-        IHandlerActivationHost,
-        ICustomQueryInterface,
-        IOleWindow
-    {
-        public unsafe HRESULT GetIDList(out nint ppidl)
-        {
-            var terminator = 0;
-            ppidl = Functions.ILClone((nint)(&terminator));
-            return DirectN.Constants.S_OK;
-        }
-
-        public unsafe HRESULT GetUIObjectOf(HWND hwndOwner, uint cidl, nint[] apidl, in Guid riid, nint rgfReserved, out nint ppv)
-        {
-            ppv = 0;
-            if (riid == typeof(IQueryAssociations).GUID && cidl > 0)
-            {
-                using var item = FromPidl(apidl[0], throwOnError: false);
-                if (item != null)
-                {
-                    var hr = item.NativeObject.BindToHandler(null, Constants.BHID_AssociationArray, riid, out ppv);
-                    return hr;
-                }
-            }
-
-            if (riid == typeof(IDataObject).GUID)
-            {
-                var terminator = 0;
-                var hr = Functions.SHCreateDataObject((nint)(&terminator), cidl, apidl.AsPointer(), null, riid, out ppv);
-                return hr;
-            }
-
-            //Application.TraceVerbose($"ShellFolder2 GetUIObjectOf riid:" + riid.ToString("B"));
-            return DirectN.Constants.E_NOINTERFACE;
-        }
-
-        public HRESULT GetWindow(out HWND phwnd)
-        {
-            phwnd = hwnd;
-            return DirectN.Constants.S_OK;
-        }
-
-        public HRESULT QueryService(in Guid guidService, in Guid riid, out nint ppvObject)
-        {
-            ppvObject = DirectN.Extensions.Com.ComObject.GetOrCreateComInstance(this, riid, CreateComInterfaceFlags.None);
-            //Application.TraceInfo("ShellFolder2 guidService:" + guidService.ToString("B") + " riid:" + riid.ToString("B") + " ppv:" + ppvObject);
-            return ppvObject == 0 ? DirectN.Constants.E_NOINTERFACE : DirectN.Constants.S_OK;
-        }
-
-        public CustomQueryInterfaceResult GetInterface(ref Guid iid, out nint ppv)
-        {
-            //Application.TraceInfo("ShellFolder2 iid:" + iid.ToString("B"));
-            ppv = 0;
-            return CustomQueryInterfaceResult.NotHandled;
-        }
-
-        public HRESULT GetClassID(out Guid pClassID) => throw new NotImplementedException();
-        public HRESULT SetIDList(nint pidl) => throw new NotImplementedException();
-        public HRESULT ParseDisplayName(HWND hwnd, IBindCtx pbc, PWSTR pszDisplayName, nint pchEaten, out nint ppidl, ref uint pdwAttributes) => throw new NotImplementedException();
-        public HRESULT EnumObjects(HWND hwnd, uint grfFlags, out IEnumIDList ppenumIDList) => throw new NotImplementedException();
-        public HRESULT BindToObject(nint pidl, IBindCtx pbc, in Guid riid, out nint ppv) => throw new NotImplementedException();
-        public HRESULT BindToStorage(nint pidl, IBindCtx pbc, in Guid riid, out nint ppv) => throw new NotImplementedException();
-        public HRESULT CompareIDs(LPARAM lParam, nint pidl1, nint pidl2) => throw new NotImplementedException();
-        public HRESULT CreateViewObject(HWND hwndOwner, in Guid riid, out nint ppv) => throw new NotImplementedException();
-        public HRESULT GetAttributesOf(uint cidl, nint[] apidl, ref uint rgfInOut) => throw new NotImplementedException();
-        public HRESULT GetDisplayNameOf(nint pidl, SHGDNF uFlags, out STRRET pName) => throw new NotImplementedException();
-        public HRESULT SetNameOf(HWND hwnd, nint pidl, PWSTR pszName, SHGDNF uFlags, nint ppidlOut) => throw new NotImplementedException();
-        public HRESULT ContextSensitiveHelp(BOOL fEnterMode) => throw new NotImplementedException();
-
-        public HRESULT BeforeCoCreateInstance(in Guid clsidHandler, IShellItemArray itemsBeingActivated, IHandlerInfo handlerInfo)
-        {
-            //Application.TraceVerbose($"ShellFolder2 clsidHandler: {clsidHandler:B}");
-            return 0;
-        }
-
-        public HRESULT BeforeCreateProcess(PWSTR applicationPath, PWSTR commandLine, IHandlerInfo handlerInfo)
-        {
-            //Application.TraceVerbose($"ShellFolder2 applicationPath: {applicationPath}");
-            return 0;
-        }
-    }
-
-    public unsafe void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public void ShowContextMenu(object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
     {
         using var pidl = GetIdList(false);
         if (pidl is null)
@@ -687,8 +609,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         ShowContextMenu([pidl], site, context, flags);
     }
 
-    // AFAIK, it's impossible to extract *all* items w/o a real popup menu created by SHCreateDefaultContextMenu
-    public unsafe static void ShowContextMenu(IEnumerable<ItemIdList> list, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public static void ShowContextMenu(IEnumerable<ItemIdList> list, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
     {
         ArgumentNullException.ThrowIfNull(list);
         var array = list.ToArray();
@@ -697,29 +618,38 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         DirectN.Functions.GetCursorPos(out var cursor);
 
-        var def = new DEFCONTEXTMENU();
+        HWND hwnd = 0;
         if (site is DirectN.IOleWindow window)
         {
-            window.GetWindow(out var hwnd);
-            def.hwnd = hwnd;
+            window.GetWindow(out hwnd);
         }
-
-        var folder = new ShellFolder2(def.hwnd);
-        DirectN.Extensions.Com.ComObject.WithComInstanceOfType<IShellFolder>(folder, psf => def.psf = psf, true, false); // don't check any error
-
-        var pidls = new nint[array.Length];
-        for (int i = 0; i < array.Length; i++)
+        else if (site is IOleWindow window2)
         {
-            pidls[i] = array[i].Pointer;
+            window2.GetWindow(out hwnd);
         }
 
-        fixed (nint* pPidls = pidls)
+        // note this code presumes all items are in the same folder, which is usually the case
+        // the first item is used to get the folder
+        // if the items are in different folders, the context menu result is undefined
+        using var first = FromPidl(array[0].Pointer);
+        if (first == null)
+            return;
+
+        using var firstFolder = first.GetParent();
+        if (firstFolder == null)
+            return;
+
+        var relativePidls = new nint[array.Length];
+        for (var i = 0; i < array.Length; i++)
         {
-            def.apidl = (nint)pPidls;
-            def.cidl = (uint)array.Length;
+            relativePidls[i] = array[i].RelativePointer;
         }
 
-        Functions.SHCreateDefaultContextMenu(def, typeof(IContextMenu).GUID, out var unk);
+        using var shellFolder = firstFolder.BindToHandler<IShellFolder>(Constants.BHID_SFObject, context);
+        if (shellFolder == null)
+            return;
+
+        shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), relativePidls, typeof(IContextMenu).GUID, 0, out var unk);
         using var cm = DirectN.Extensions.Com.ComObject.FromPointer<IContextMenu>(unk);
         if (cm == null)
             return;
@@ -730,7 +660,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         DirectN.Extensions.Com.ComObject.WithComInstance(cm2, unk =>
         {
-            DirectN.Functions.SetPropW(def.hwnd, PWSTR.From(_contextMenuPropName), new HANDLE(unk));
+            DirectN.Functions.SetPropW(hwnd, PWSTR.From(_contextMenuPropName), new HANDLE(unk));
         });
 
         if (site != null && cm.Object is IObjectWithSite ows)
@@ -747,24 +677,17 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
             if (cm.Object.QueryContextMenu(menu, 0, 0, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
                 return;
 
-            var id = Functions.TrackPopupMenu(menu, TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD, cursor.x, cursor.y, 0, def.hwnd, 0);
+            var id = Functions.TrackPopupMenu(menu, TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD, cursor.x, cursor.y, 0, hwnd, 0);
             if (id != 0)
             {
-                var info = new CMINVOKECOMMANDINFO
-                {
-                    cbSize = (uint)sizeof(CMINVOKECOMMANDINFO),
-                    hwnd = def.hwnd,
-                    nShow = (int)SHOW_WINDOW_CMD.SW_SHOWNORMAL,
-                    lpVerb = new PSTR(id)
-                };
-                cm.Object.InvokeCommand(info);
+                var hr = Invoke(cm.Object, hwnd, null, id);
             }
         }
         finally
         {
             DirectN.Extensions.Com.ComObject.WithComInstance(cm2, unk =>
             {
-                DirectN.Functions.RemovePropW(def.hwnd, PWSTR.From(_contextMenuPropName));
+                DirectN.Functions.RemovePropW(hwnd, PWSTR.From(_contextMenuPropName));
             });
             Functions.DestroyMenu(menu);
         }
@@ -786,7 +709,8 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
                     LRESULT res = 0;
                     var hr = cm3.Object.HandleMenuMsg2(msg, wParam, lParam, (nint)(&res));
                     result = res;
-                    return hr;
+                    if (hr.IsSuccess)
+                        return hr;
                 }
             }
 
@@ -799,8 +723,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
         return DirectN.Constants.E_NOINTERFACE;
     }
 
-    // AFAIK, it's impossible to extract *all* items w/o a real popup menu created by SHCreateDefaultContextMenu
-    public unsafe static HRESULT InvokeContextMenuVerb(IEnumerable<ItemIdList> list, string verb, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
+    public static HRESULT InvokeContextMenuVerb(IEnumerable<ItemIdList> list, string verb, object? site = null, IComObject<IBindCtx>? context = null, CMF flags = CMF.CMF_NORMAL)
     {
         ArgumentNullException.ThrowIfNull(list);
         ArgumentNullException.ThrowIfNull(verb);
@@ -810,29 +733,38 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         DirectN.Functions.GetCursorPos(out var cursor);
 
-        var def = new DEFCONTEXTMENU();
+        HWND hwnd = 0;
         if (site is DirectN.IOleWindow window)
         {
-            window.GetWindow(out var hwnd);
-            def.hwnd = hwnd;
+            window.GetWindow(out hwnd);
         }
-
-        var folder = new ShellFolder2(def.hwnd);
-        DirectN.Extensions.Com.ComObject.WithComInstanceOfType<IShellFolder>(folder, psf => def.psf = psf, true, false); // don't check any error
-
-        var pidls = new nint[array.Length];
-        for (int i = 0; i < array.Length; i++)
+        else if (site is IOleWindow window2)
         {
-            pidls[i] = array[i].Pointer;
+            window2.GetWindow(out hwnd);
         }
 
-        fixed (nint* pPidls = pidls)
+        // note this code presumes all items are in the same folder, which is usually the case
+        // the first item is used to get the folder
+        // if the items are in different folders, the context menu result is undefined
+        using var first = FromPidl(array[0].Pointer, throwOnError: false);
+        if (first == null)
+            return DirectN.Constants.E_FAIL;
+
+        using var firstFolder = first.GetParent();
+        if (firstFolder == null)
+            return DirectN.Constants.E_FAIL;
+
+        var relativePidls = new nint[array.Length];
+        for (var i = 0; i < array.Length; i++)
         {
-            def.apidl = (nint)pPidls;
-            def.cidl = (uint)array.Length;
+            relativePidls[i] = array[i].RelativePointer;
         }
 
-        Functions.SHCreateDefaultContextMenu(def, typeof(IContextMenu).GUID, out var unk);
+        using var shellFolder = firstFolder.BindToHandler<IShellFolder>(Constants.BHID_SFObject, context);
+        if (shellFolder == null)
+            return DirectN.Constants.E_FAIL;
+
+        shellFolder.Object.GetUIObjectOf(hwnd, relativePidls.Length(), relativePidls, typeof(IContextMenu).GUID, 0, out var unk);
         using var cm = DirectN.Extensions.Com.ComObject.FromPointer<IContextMenu>(unk);
         if (cm == null)
             return DirectN.Constants.E_NOINTERFACE;
@@ -843,7 +775,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         DirectN.Extensions.Com.ComObject.WithComInstance(cm2, unk =>
         {
-            DirectN.Functions.SetPropW(def.hwnd, PWSTR.From(_contextMenuPropName), new HANDLE(unk));
+            DirectN.Functions.SetPropW(hwnd, PWSTR.From(_contextMenuPropName), new HANDLE(unk));
         });
 
         if (site != null && cm.Object is IObjectWithSite ows)
@@ -860,23 +792,54 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
             if (cm.Object.QueryContextMenu(menu, 0, 0, Constants.FCIDM_SHVIEWLAST, (uint)flags).IsError)
                 return DirectN.Constants.E_FAIL;
 
-            var info = new CMINVOKECOMMANDINFO
-            {
-                cbSize = (uint)sizeof(CMINVOKECOMMANDINFO),
-                hwnd = def.hwnd,
-                nShow = (int)SHOW_WINDOW_CMD.SW_SHOWNORMAL,
-                lpVerb = PSTR.From(verb)
-            };
-            return cm.Object.InvokeCommand(info);
+            return Invoke(cm.Object, hwnd, verb, 0);
         }
         finally
         {
             DirectN.Extensions.Com.ComObject.WithComInstance(cm2, unk =>
             {
-                DirectN.Functions.RemovePropW(def.hwnd, PWSTR.From(_contextMenuPropName));
+                DirectN.Functions.RemovePropW(hwnd, PWSTR.From(_contextMenuPropName));
             });
             Functions.DestroyMenu(menu);
         }
+    }
+
+    private static unsafe HRESULT Invoke(IContextMenu cm, HWND hwnd, string? verb, int id)
+    {
+        var mask = CMIC.CMIC_MASK_UNICODE | CMIC.CMIC_MASK_PTINVOKE;
+        var info = new CMINVOKECOMMANDINFOEX
+        {
+            cbSize = (uint)sizeof(CMINVOKECOMMANDINFOEX),
+            hwnd = hwnd,
+            nShow = (int)SHOW_WINDOW_CMD.SW_SHOWNORMAL,
+        };
+
+        DirectN.Functions.GetCursorPos(out info.ptInvoke);
+
+        if (DirectN.Functions.GetKeyState((int)VIRTUAL_KEY.VK_CONTROL) < 0)
+        {
+            mask |= CMIC.CMIC_MASK_CONTROL_DOWN;
+        }
+
+        if (DirectN.Functions.GetKeyState((int)VIRTUAL_KEY.VK_SHIFT) < 0)
+        {
+            mask |= CMIC.CMIC_MASK_SHIFT_DOWN;
+        }
+
+        info.fMask = (uint)mask;
+
+        if (verb != null)
+        {
+            info.lpVerb = PSTR.From(verb);
+            info.lpVerbW = PWSTR.From(verb);
+        }
+        else
+        {
+            info.lpVerb = new PSTR(id);
+            info.lpVerbW = new PWSTR(id);
+        }
+
+        return cm.InvokeCommand(Unsafe.AsRef<CMINVOKECOMMANDINFO>((CMINVOKECOMMANDINFO*)&info));
     }
 
     public byte[]? GetIdListAsByteArray(bool throwOnError = true)

@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="70.0.11-preview" GeneratePathProperty="true" />
+		<PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="71.0.20-preview" GeneratePathProperty="true" />
 	</ItemGroup>
 
 	<ItemGroup>

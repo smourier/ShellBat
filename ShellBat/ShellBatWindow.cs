@@ -12,6 +12,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
     private readonly Dictionary<string, WebTerminal> _terminals = [];
     private readonly ConcurrentDictionary<string, object?> _queries = new();
     private readonly List<PreviewViewer> _previewViewers = [];
+    private Site? _site;
     private PdfRenderer? _pdfRenderer;
     private EntryWatcher? _watcher;
     private SpriteVisual? _loadingVisual;
@@ -38,6 +39,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
             rect: ShellBatInstance.Current.Settings.GetInitialRect())
     {
         _created = true;
+        _site = new Site(this);
         ShellBatCommand.ProcessSettings(Handle);
         Cursor = DirectN.Extensions.Utilities.Cursor.AppStarting.Handle;
         DirectN.Functions.AddClipboardFormatListener(Handle);
@@ -1073,8 +1075,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                         }
                     }
 
-                    using var site = new Site(this);
-                    ShellItem.ShowContextMenu(list, site, flags: CMF.CMF_EXPLORE | CMF.CMF_EXTENDEDVERBS | CMF.CMF_CANRENAME);
+                    ShellItem.ShowContextMenu(list, _site, flags: CMF.CMF_EXPLORE | CMF.CMF_EXTENDEDVERBS | CMF.CMF_CANRENAME);
                 }
                 finally
                 {
@@ -3050,6 +3051,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
             _watcher?.Dispose();
             _watcher = null;
             Interlocked.Exchange(ref _pdfRenderer, null)?.Dispose();
+            Interlocked.Exchange(ref _site, null)?.Dispose();
         }
         base.Dispose(disposing);
     }

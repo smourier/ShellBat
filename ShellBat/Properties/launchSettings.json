@@ -2,9 +2,9 @@
   "profiles": {
     "ShellBat": {
       "commandName": "Project",
-      "nativeDebugging": false,
       "jsWebView2Debugging": false,
-      "hotReloadEnabled": false
+      "hotReloadEnabled": false,
+      "debugEngines": "managed"
     }
   }
 }

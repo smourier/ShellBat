@@ -623,6 +623,11 @@ public static class System
     public static PROPERTYKEY ItemFolderPathDisplayNarrow => new(new("dabd30ed-0043-4789-a7f8-d013a4736622"), 100);
     
     /// <summary>
+    /// <b>System.ItemFolderPathDisplayNarrowNamespaceRelative</b> of <b>VT_LPWSTR</b> type.
+    /// </summary>
+    public static PROPERTYKEY ItemFolderPathDisplayNarrowNamespaceRelative => new(new("dabd30ed-0043-4789-a7f8-d013a4736622"), 101);
+    
+    /// <summary>
     /// <b>System.ItemId</b> of <b>VT_NULL</b> type.
     /// </summary>
     public static PROPERTYKEY ItemId => new(new("1e3ee840-bc2b-476c-8237-2acd1a839b22"), 8);
@@ -4391,6 +4396,14 @@ public static class System
             public static PROPERTYKEY InterfaceGuid => new(new("ef1167eb-cbfc-4341-a568-a7c91a68982c"), 2);
         }
         
+        public static class WiFiAware
+        {
+            /// <summary>
+            /// <b>System.Devices.WiFiAware.IsSupported</b> of <b>VT_BOOL</b> type.
+            /// </summary>
+            public static PROPERTYKEY IsSupported => new(new("9d2e9e67-70d4-4d1a-aefd-113cf6a7dfca"), 2);
+        }
+        
         public static class WiFiDirect
         {
             /// <summary>
@@ -4689,6 +4702,26 @@ public static class System
     
     public static class FileOperation
     {
+        /// <summary>
+        /// <b>System.FileOperation.Action</b> of <b>VT_LPWSTR</b> type.
+        /// </summary>
+        public static PROPERTYKEY Action => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 102);
+        
+        /// <summary>
+        /// <b>System.FileOperation.Destination</b> of <b>VT_LPWSTR</b> type.
+        /// </summary>
+        public static PROPERTYKEY Destination => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 103);
+        
+        /// <summary>
+        /// <b>System.FileOperation.Order</b> of <b>VT_UI4</b> type.
+        /// </summary>
+        public static PROPERTYKEY Order => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 104);
+        
+        /// <summary>
+        /// <b>System.FileOperation.PlannedLocation</b> of <b>VT_LPWSTR</b> type.
+        /// </summary>
+        public static PROPERTYKEY PlannedLocation => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 105);
+        
         /// <summary>
         /// <b>System.FileOperation.Target</b> of <b>VT_LPWSTR</b> type.
         /// </summary>

@@ -83,6 +83,7 @@
     "DBT_*",
     "SH*",
     "!Shutdown*",
+    "!ShouldBlockRevertInternal",
     "TrackPopupMenu",
     "MUTZ_*",
     "WNetGetNetworkInformationW",

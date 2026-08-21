@@ -30,6 +30,16 @@ public sealed class ItemIdList : IDisposable, IEnumerable<ItemId>, IEquatable<It
     public nint Pointer => _buffer.DangerousGetHandle();
     public uint Size => (uint)_buffer.ByteLength;
 
+    public unsafe nint RelativePointer
+    {
+        get
+        {
+            nint pointer;
+            Functions.SHBindToParent(Pointer, typeof(IShellFolder).GUID, out var parent, (nint)(&pointer));
+            return pointer;
+        }
+    }
+
     public string? DisplayName
     {
         get

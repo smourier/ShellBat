@@ -13,7 +13,7 @@ namespace ShellN.InteropBuilder.Cli
 {
     public static class Win32Metadata
     {
-        public const string WinMdPath = @"E:\packages\nuget\microsoft.windows.sdk.win32metadata\70.0.11-preview";
+        public const string WinMdPath = @"E:\packages\nuget\microsoft.windows.sdk.win32metadata\71.0.20-preview";
         public const string SolutionDir = @"E:\smo\GitHub\ShellBat\";
     }
 }

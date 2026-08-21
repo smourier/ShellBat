@@ -91,10 +91,7 @@ public partial class ShellBatInstance : IShellBatInstance, IDisposable
 
         _serverStopEvent = new AutoResetEvent(false);
         _notifyStopEvent = new AutoResetEvent(false);
-        _notifyEvent = NotifyEvent.CreateEvent(MonikerPrefix.ToString("N"));
-        if (_notifyEvent is null)
-            throw new ShellBatException($"0002: Cannot create notify event named '{MonikerPrefix}'.");
-
+        _notifyEvent = NotifyEvent.CreateEvent(MonikerPrefix.ToString("N")) ?? throw new ShellBatException($"0002: Cannot create notify event named '{MonikerPrefix}'.");
         if (Settings.LogToFile)
         {
             _logWriterScheduler = new(thread =>
