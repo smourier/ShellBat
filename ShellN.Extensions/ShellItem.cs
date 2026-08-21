@@ -724,7 +724,7 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
             if (id != 0)
             {
                 if (invoke != null)
-                    return invoke(cm.Object, hwnd, (uint)id);
+                    return invoke(cm.Object, hwnd, (uint)(id - (int)firstCommandId));
 
                 return Invoke(cm.Object, hwnd, (uint)(id - (int)firstCommandId));
             }
