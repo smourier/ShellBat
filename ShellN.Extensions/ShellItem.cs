@@ -885,10 +885,12 @@ public partial class ShellItem : InterlockedComObject<IShellItem2>, IItemWithAbs
 
         info.fMask = (uint)mask;
 
+        using var verbStr = new Pstr(verb);
+        using var verbWStr = new Pwstr(verb);
         if (verb != null)
         {
-            info.lpVerb = PSTR.From(verb);
-            info.lpVerbW = PWSTR.From(verb);
+            info.lpVerb = verbStr;
+            info.lpVerbW = verbWStr;
         }
         else
         {
