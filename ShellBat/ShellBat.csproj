@@ -195,10 +195,10 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DirectNAot" Version="1.6.8" />
-		<PackageReference Include="DirectNAot.Extensions" Version="1.6.8" />
+		<PackageReference Include="DirectNAot" Version="1.6.9" />
+		<PackageReference Include="DirectNAot.Extensions" Version="1.6.9" />
 		<PackageReference Include="WebView2Aot" Version="1.5.2" />
-		<PackageReference Include="WicNetCore" Version="1.9.6" />
+		<PackageReference Include="WicNetCore" Version="1.9.7" />
 	</ItemGroup>
 
 	<ItemGroup>
