@@ -4708,11 +4708,6 @@ public static class System
         public static PROPERTYKEY Action => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 102);
         
         /// <summary>
-        /// <b>System.FileOperation.Destination</b> of <b>VT_LPWSTR</b> type.
-        /// </summary>
-        public static PROPERTYKEY Destination => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 103);
-        
-        /// <summary>
         /// <b>System.FileOperation.Order</b> of <b>VT_UI4</b> type.
         /// </summary>
         public static PROPERTYKEY Order => new(new("65ab9702-37ae-462e-9446-1d41ab0cbc19"), 104);
