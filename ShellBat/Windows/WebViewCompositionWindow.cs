@@ -52,7 +52,8 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             SetCorner(ShellBatInstance.Current.Settings.WindowCorner);
         }
         var options = GetEnvironmentOptions();
-        WebView2.Functions.CreateCoreWebView2EnvironmentWithOptions(PWSTR.Null, PWSTR.From(Settings.WebView2UserDataPath), options!,
+        using var userDataPathStr = new Pwstr(Settings.WebView2UserDataPath);
+        WebView2.Functions.CreateCoreWebView2EnvironmentWithOptions(PWSTR.Null, userDataPathStr, options!,
             new CoreWebView2CreateCoreWebView2EnvironmentCompletedHandler((result, envObj) =>
             {
                 options?.Dispose();
@@ -210,7 +211,8 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     {
         ArgumentNullException.ThrowIfNull(script);
         var webView = _webView ?? throw new InvalidOperationException();
-        return webView.Object.ExecuteScript(PWSTR.From(script), new CoreWebView2ExecuteScriptCompletedHandler((error, result) =>
+        using var scriptStr = new Pwstr(script);
+        return webView.Object.ExecuteScript(scriptStr, new CoreWebView2ExecuteScriptCompletedHandler((error, result) =>
         {
         })).ThrowOnError(throwOnError);
     }

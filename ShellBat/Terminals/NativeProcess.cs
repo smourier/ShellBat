@@ -46,9 +46,10 @@ public sealed partial class NativeProcess(STARTUPINFOEX startupInfo, PROCESS_INF
         var startupInfo = ConfigureProcessThread(hPC, attributes);
 
         DirectN.Functions.SetErrorMode(THREAD_ERROR_MODE.SEM_FAILCRITICALERRORS);
+        using var commandLineStr = new Pwstr(commandLine);
         if (!Interop.Functions.CreateProcessW(
             PWSTR.Null,
-            PWSTR.From(commandLine),
+            commandLineStr,
             new SECURITY_ATTRIBUTES { nLength = (uint)sizeof(SECURITY_ATTRIBUTES) },
             new SECURITY_ATTRIBUTES { nLength = (uint)sizeof(SECURITY_ATTRIBUTES) },
             false,

@@ -578,11 +578,13 @@ public class FileExtension : IEquatable<FileExtension>, IComparable<FileExtensio
 
         uint size = 256;
         using var clsid = new Pwstr(Marshal.AllocCoTaskMem((int)size));
+        using var extensionStr = new Pwstr(extension);
+        using var handlerStr = new Pwstr(typeof(IPreviewHandler).GUID.ToString("B"));
         if (ShellN.Functions.AssocQueryStringW(
             ASSOCF.ASSOCF_INIT_DEFAULTTOSTAR,
             ASSOCSTR.ASSOCSTR_SHELLEXTENSION,
-            PWSTR.From(extension),
-            PWSTR.From(typeof(IPreviewHandler).GUID.ToString("B")),
+            extensionStr,
+            handlerStr,
             clsid, ref size).IsError)
             return null;
 
