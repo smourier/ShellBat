@@ -6,15 +6,14 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     private readonly bool[] _capturedButtons = new bool[Enum.GetNames<MouseButton>().Length];
     private readonly HashSet<uint> _pointerIdsStartingInWebView = [];
     private readonly Dictionary<ulong, NavigationEventArgs> _navigationEvents = [];
-    private ComObject<ICoreWebView2CompositionController>? _controller;
+    private IComObject<ICoreWebView2CompositionController>? _controller;
     private IComObject<ICoreWebView2CompositionController3>? _controller3;
     private ComObject<ICoreWebView2Environment3>? _environment;
-    private ComObject<ICoreWebView2_3>? _webView;
+    private IComObject<ICoreWebView2>? _webView;
+    private CoreWebView2CompositionControllerEvents? _controllerEvents;
+    private CoreWebView2Events? _webViewEvents;
     private bool _mouseTracking;
     private bool _isDropTarget;
-    private WebView2.EventRegistrationToken _cursorChangedToken;
-    private WebView2.EventRegistrationToken _navigationStarting;
-    private WebView2.EventRegistrationToken _navigationCompleted;
 
     public event EventHandler<MouseEventArgs>? MouseMove;
     public event EventHandler<MouseEventArgs>? MouseLeave;
@@ -59,84 +58,69 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
                 options?.Dispose();
                 var env3 = (ICoreWebView2Environment3)envObj;
                 _environment = new ComObject<ICoreWebView2Environment3>(env3);
-                env3.CreateCoreWebView2CompositionController(Handle, new CoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler((result, controller) =>
-                {
-                    _controller = new ComObject<ICoreWebView2CompositionController>(controller);
-                    _controller3 = ComExtensions.As<ICoreWebView2CompositionController3>(_controller);
-                    _controller.Object.add_CursorChanged(new CoreWebView2CursorChangedEventHandler((sender, args) =>
-                    {
-                        var cursor = new HCURSOR();
-                        if (sender.get_Cursor(ref cursor).IsSuccess && CanChangeCursor)
-                        {
-                            Cursor = cursor;
-                        }
-                    }), ref _cursorChangedToken).ThrowOnError();
-
-                    var cb = RootVisual.As<IUnknown>();
-                    _controller.Object.put_RootVisualTarget(cb).ThrowOnError();
-
-                    var ctrl = (ICoreWebView2Controller)controller;
-                    ctrl.put_Bounds(ClientRect).ThrowOnError();
-                    ctrl.get_CoreWebView2(out var webView2).ThrowOnError();
-                    _webView = new ComObject<ICoreWebView2_3>(webView2);
-
-                    _webView.Object.add_NavigationStarting(new CoreWebView2NavigationStartingEventHandler((sender, args) =>
-                    {
-                        var id = 0UL;
-                        args.get_NavigationId(ref id).ThrowOnError();
-                        args.get_Uri(out var uri).ThrowOnError();
-                        using var pwstr = new Pwstr(uri.Value);
-
-                        var isUserInitiated = BOOL.FALSE;
-                        args.get_IsUserInitiated(ref isUserInitiated).ThrowOnError();
-
-                        var isRedirected = BOOL.FALSE;
-                        args.get_IsRedirected(ref isRedirected).ThrowOnError();
-
-                        var e = new NavigationEventArgs(
-                            id,
-                            uri.ToString()!,
-                            isUserInitiated,
-                            isRedirected
-                            );
-                        _navigationEvents[id] = e;
-
-                        OnNavigationStarting(this, e);
-                        if (e.Cancel)
-                        {
-                            args.put_Cancel(true).ThrowOnError();
-                        }
-                    }), ref _navigationStarting).ThrowOnError();
-
-                    _webView.Object.add_NavigationCompleted(new CoreWebView2NavigationCompletedEventHandler((sender, args) =>
-                    {
-                        var id = 0UL;
-                        args.get_NavigationId(ref id).ThrowOnError();
-
-                        var status = COREWEBVIEW2_WEB_ERROR_STATUS.COREWEBVIEW2_WEB_ERROR_STATUS_UNKNOWN;
-                        args.get_WebErrorStatus(ref status).ThrowOnError();
-
-                        var success = BOOL.FALSE;
-                        args.get_IsSuccess(ref success).ThrowOnError();
-
-                        if (_navigationEvents.TryGetValue(id, out var e))
-                        {
-                            e.Type = NavigationEventType.NavigationCompleted;
-                            e.WebErrorStatus = status;
-                            e.IsSuccess = success;
-
-                            _navigationEvents.Remove(id);
-                            OnNavigationCompleted(this, e);
-                        }
-                    }), ref _navigationCompleted).ThrowOnError();
-
-                    ControllerCreated();
-                }));
+                _ = CreateControllerAsync(env3);
             }));
     }
 
-    protected ComObject<ICoreWebView2CompositionController>? Controller => _controller;
-    protected ComObject<ICoreWebView2_3>? WebView => _webView;
+    private async Task CreateControllerAsync(ICoreWebView2Environment3 environment)
+    {
+        try
+        {
+            _controller = await environment.CreateCoreWebView2CompositionControllerAsync(Handle) ?? throw new InvalidOperationException("The WebView2 composition controller could not be created.");
+            _controller3 = ComExtensions.As<ICoreWebView2CompositionController3>(_controller);
+            _controllerEvents = new CoreWebView2CompositionControllerEvents(_controller);
+            _controllerEvents.CursorChanged += (sender, args) =>
+            {
+                if (CanChangeCursor && sender is ICoreWebView2CompositionController controller)
+                {
+                    Cursor = controller.Cursor;
+                }
+            };
+
+            _controller.RootVisualTarget = RootVisual;
+
+            var ctrl = (ICoreWebView2Controller)_controller.Object;
+            ctrl.Bounds = ClientRect;
+            _webView = ctrl.CoreWebView2 ?? throw new InvalidOperationException("The WebView2 controller has no WebView.");
+
+            _webViewEvents = new CoreWebView2Events(_webView);
+            _webViewEvents.NavigationStarting += (sender, args) =>
+            {
+                var id = args.NavigationId;
+                var e = new NavigationEventArgs(id, args.Uri ?? string.Empty, args.IsUserInitiated, args.IsRedirected);
+                _navigationEvents[id] = e;
+
+                OnNavigationStarting(this, e);
+                if (e.Cancel)
+                {
+                    args.Cancel = true;
+                }
+            };
+
+            _webViewEvents.NavigationCompleted += (sender, args) =>
+            {
+                var id = args.NavigationId;
+                if (_navigationEvents.TryGetValue(id, out var e))
+                {
+                    e.Type = NavigationEventType.NavigationCompleted;
+                    e.WebErrorStatus = args.WebErrorStatus;
+                    e.IsSuccess = args.IsSuccess;
+
+                    _navigationEvents.Remove(id);
+                    OnNavigationCompleted(this, e);
+                }
+            };
+
+            ControllerCreated();
+        }
+        catch (Exception ex)
+        {
+            Application.AddError(ex);
+        }
+    }
+
+    protected IComObject<ICoreWebView2CompositionController>? Controller => _controller;
+    protected IComObject<ICoreWebView2>? WebView => _webView;
     protected ComObject<ICoreWebView2Environment3>? Environment => _environment;
 
     public HMONITOR MonitorHandle { get; private set; }
@@ -197,24 +181,21 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     {
         ArgumentNullException.ThrowIfNull(script);
         var webView = _webView ?? throw new InvalidOperationException();
-        return webView.Object.ExecuteScript(script, typeInfo, throwOnError: throwOnError);
+        return webView.ExecuteScript(script, typeInfo, throwOnError: throwOnError);
     }
 
     public virtual Task<string?> ExecuteScriptAsJson(string script, bool throwOnError = true)
     {
         ArgumentNullException.ThrowIfNull(script);
         var webView = _webView ?? throw new InvalidOperationException();
-        return webView.Object.ExecuteScriptAsJon(script, throwOnError: throwOnError);
+        return webView.ExecuteScriptAsJson(script, throwOnError);
     }
 
     public virtual HRESULT ExecuteScript(string script, bool throwOnError = true)
     {
         ArgumentNullException.ThrowIfNull(script);
         var webView = _webView ?? throw new InvalidOperationException();
-        using var scriptStr = new Pwstr(script);
-        return webView.Object.ExecuteScript(scriptStr, new CoreWebView2ExecuteScriptCompletedHandler((error, result) =>
-        {
-        })).ThrowOnError(throwOnError);
+        return webView.ExecuteScript(script, throwOnError);
     }
 
     protected virtual void OnPointerWheel(object? sender, PointerWheelEventArgs e) => PointerWheel?.Invoke(sender, e);
@@ -300,13 +281,14 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
 
     protected virtual void ClearBrowsingDataAll()
     {
-        var wv = _webView.As<ICoreWebView2_13>();
-        if (wv == null)
+        if (_webView?.Object is not ICoreWebView2_13)
             return;
 
-        wv.Object.get_Profile(out var objProfile);
-        using var profile = new ComObject<ICoreWebView2Profile2>(objProfile);
-        profile?.Object.ClearBrowsingDataAll(new CoreWebView2ClearBrowsingDataCompletedHandler(h => { }));
+        using var profile = _webView.Profile;
+        if (profile?.Object is not ICoreWebView2Profile2)
+            return;
+
+        _ = profile.ClearBrowsingDataAllAsync();
     }
 
     private void OnMouseMove(MouseEventArgs e)
@@ -316,7 +298,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             return;
 
         var keys = WindowsExtensions.GetKeys(e.Keys, null);
-        _controller?.Object.SendMouseInput(COREWEBVIEW2_MOUSE_EVENT_KIND.COREWEBVIEW2_MOUSE_EVENT_KIND_MOVE, keys, 0, e.Point).ThrowOnError();
+        _controller?.SendMouseInput(COREWEBVIEW2_MOUSE_EVENT_KIND.COREWEBVIEW2_MOUSE_EVENT_KIND_MOVE, keys, 0, e.Point);
     }
 
     private void OnMouseLeave(MouseEventArgs e)
@@ -325,11 +307,11 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
         if (e.Handled)
             return;
 
-        _controller?.Object.SendMouseInput(
+        _controller?.SendMouseInput(
             COREWEBVIEW2_MOUSE_EVENT_KIND.COREWEBVIEW2_MOUSE_EVENT_KIND_LEAVE,
             COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS.COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS_NONE,
             0,
-            POINT.Zero).ThrowOnError();
+            POINT.Zero);
     }
 
     private void OnMouseButtonDown(MouseButtonEventArgs e)
@@ -340,7 +322,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
 
         var keys = WindowsExtensions.GetKeys(e.Keys, e.Button);
         var kind = e.Button.GetKind(WindowsExtensions.ButtonAction.Down);
-        _controller?.Object.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point).ThrowOnError();
+        _controller?.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point);
     }
 
     private void OnMouseButtonUp(MouseButtonEventArgs e)
@@ -351,7 +333,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
 
         var keys = WindowsExtensions.GetKeys(e.Keys, e.Button);
         var kind = e.Button.GetKind(WindowsExtensions.ButtonAction.Up);
-        _controller?.Object.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point).ThrowOnError();
+        _controller?.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point);
     }
 
     private void OnMouseButtonDoubleClick(MouseButtonEventArgs e)
@@ -362,7 +344,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
 
         var keys = WindowsExtensions.GetKeys(e.Keys, e.Button);
         var kind = e.Button.GetKind(WindowsExtensions.ButtonAction.DoubleClick);
-        _controller?.Object.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point).ThrowOnError();
+        _controller?.SendMouseInput(kind, keys, e.Button == MouseButton.X1 ? 1u : e.Button == MouseButton.X2 ? 2u : 0, e.Point);
     }
 
     private void OnMouseWheel(MouseWheelEventArgs e)
@@ -375,7 +357,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
         var kind = e.Orientation == Orientation.Horizontal
             ? COREWEBVIEW2_MOUSE_EVENT_KIND.COREWEBVIEW2_MOUSE_EVENT_KIND_HORIZONTAL_WHEEL
             : COREWEBVIEW2_MOUSE_EVENT_KIND.COREWEBVIEW2_MOUSE_EVENT_KIND_WHEEL;
-        _controller?.Object.SendMouseInput(kind, keys, (uint)(e.Delta * DirectN.Constants.WHEEL_DELTA), e.Point).ThrowOnError();
+        _controller?.SendMouseInput(kind, keys, (uint)(e.Delta * DirectN.Constants.WHEEL_DELTA), e.Point);
     }
 
     protected override LRESULT? WindowProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
@@ -640,7 +622,7 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     {
         if (_controller?.Object is ICoreWebView2Controller c)
         {
-            c.put_Bounds(ClientRect).ThrowOnError();
+            c.Bounds = ClientRect;
         }
         return base.OnResized(type, size);
     }
@@ -649,23 +631,8 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
     {
         if (disposing)
         {
-            if (_cursorChangedToken.value != 0)
-            {
-                _controller?.Object.remove_CursorChanged(_cursorChangedToken);
-                _cursorChangedToken.value = 0;
-            }
-
-            if (_navigationCompleted.value != 0)
-            {
-                WebView?.Object.remove_NavigationCompleted(_navigationCompleted);
-                _navigationCompleted.value = 0;
-            }
-
-            if (_navigationStarting.value != 0)
-            {
-                WebView?.Object.remove_NavigationStarting(_navigationStarting);
-                _navigationStarting.value = 0;
-            }
+            Interlocked.Exchange(ref _controllerEvents, null)?.Dispose();
+            Interlocked.Exchange(ref _webViewEvents, null)?.Dispose();
 
             _environment?.Dispose();
             _controller?.Dispose();

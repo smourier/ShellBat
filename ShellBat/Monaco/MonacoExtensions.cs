@@ -26,7 +26,7 @@ public static class MonacoExtensions
 
         _loadingLanguages = true;
 
-        var json = await webView.Object.ExecuteScriptAsJon("monaco.languages.getLanguages()");
+        var json = await webView.ExecuteScriptAsJson("monaco.languages.getLanguages()");
         var languages = JsonSerializer.Deserialize(json!, JsonSourceGenerationContext.Default.LanguageExtensionPointArray);
         if (languages != null)
         {

@@ -12,17 +12,7 @@ public static class ShellBatExtensions
         if (iterator == null)
             return;
 
-        BOOL currentHeader = false;
-        while (iterator.get_HasCurrentHeader(ref currentHeader).IsSuccess && currentHeader)
-        {
-            iterator.GetCurrentHeader(out var namePtr, out var valuePtr).ThrowOnError();
-            using var name = (Pwstr)namePtr;
-            using var value = (Pwstr)valuePtr;
-            dictionary[name.ToString() ?? string.Empty] = value.ToString();
-            iterator.MoveNext(ref currentHeader).ThrowOnError();
-            if (!currentHeader)
-                break;
-        }
+        iterator.ForEach(header => dictionary[header.Key ?? string.Empty] = header.Value);
     }
 
     public static char NibbleToChar(this int value, bool upper = true) => upper ? NibbleToCharUpper(value) : NibbleToCharLower(value);

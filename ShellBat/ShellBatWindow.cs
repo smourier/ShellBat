@@ -2383,7 +2383,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
                 return true;
 
             case nameof(ShellBatCommand.OpenDevTools):
-                WebView?.Object.OpenDevToolsWindow();
+                WebView?.OpenDevToolsWindow();
                 return true;
 
             case nameof(ShellBatCommand.ToggleFullScreen):
@@ -2546,10 +2546,10 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         var options = new CoreWebView2EnvironmentOptions();
 
         // disable CORS (for js module)
-        options.put_AdditionalBrowserArguments(PWSTR.From("--allow-file-access-from-files --disable-web-security"));
+        options.AdditionalBrowserArguments = "--allow-file-access-from-files --disable-web-security";
         if (ShellBatInstance.Current.Settings.ScrollbarStyle == COREWEBVIEW2_SCROLLBAR_STYLE.COREWEBVIEW2_SCROLLBAR_STYLE_FLUENT_OVERLAY)
         {
-            options.put_ScrollBarStyle(COREWEBVIEW2_SCROLLBAR_STYLE.COREWEBVIEW2_SCROLLBAR_STYLE_FLUENT_OVERLAY);
+            options.ScrollBarStyle = COREWEBVIEW2_SCROLLBAR_STYLE.COREWEBVIEW2_SCROLLBAR_STYLE_FLUENT_OVERLAY;
         }
         return options;
     }
@@ -2558,38 +2558,32 @@ public partial class ShellBatWindow : WebViewCompositionWindow
     {
         // this is for a full support of .NET Task or Task<T> methods
         // unfortunately, uses undocumented (private) interfaces
-        if (WebView!.Object is ICoreWebView2PrivatePartial partial)
+        var webView = WebView!;
+        if (webView.As<ICoreWebView2PrivatePartial>() is { } partial)
         {
-            partial.AddHostObjectHelper(new WebViewHostObjectHelper()).ThrowOnError();
+            partial.AddHostObjectHelper(new WebViewHostObjectHelper());
             DispatchObject.ContinueOnAsync = true;
             DispatchObject.OneStepInvoke = true;
         }
 
-        WebView.Object.get_Settings(out var settingsObj).ThrowOnError();
-        using var settings = new ComObject<ICoreWebView2Settings3>(settingsObj);
-        settingsObj.put_IsBuiltInErrorPageEnabled(false).ThrowOnError();
-        settingsObj.put_AreDefaultContextMenusEnabled(false);
-        settingsObj.put_IsStatusBarEnabled(false).ThrowOnError();
-        settings.Object.put_AreBrowserAcceleratorKeysEnabled(false).ThrowOnError();
+        using var settings = webView.Settings ?? throw new InvalidOperationException("The WebView2 settings are not available.");
+        settings.IsBuiltInErrorPageEnabled = false;
+        settings.AreDefaultContextMenusEnabled = false;
+        settings.IsStatusBarEnabled = false;
+        settings.AreBrowserAcceleratorKeysEnabled = false;
 
-        // get IUnknown from the host object and wrap it in a VARIANT
-        ComObject.WithComInstance(_hostObject, unk =>
-        {
-            using var variant = new Variant(unk, VARENUM.VT_UNKNOWN);
-            var detached = variant.Detached;
-            WebView.Object.AddHostObjectToScript(PWSTR.From("dotnet"), ref detached).ThrowOnError();
-        }, true);
+        webView.AddHostObjectToScript("dotnet", _hostObject);
 
 #if DEBUG
         if (Program.DevEnabled)
         {
-            WebView.Object.OpenDevToolsWindow();
+            webView.OpenDevToolsWindow();
         }
 #else
-        settingsObj.put_AreDevToolsEnabled(Program.DevEnabled);
+        settings.AreDevToolsEnabled = Program.DevEnabled;
         if (Program.DevEnabled)
         {
-            WebView.Object.OpenDevToolsWindow();
+            webView.OpenDevToolsWindow();
         }
 #endif
 
@@ -2603,7 +2597,7 @@ public partial class ShellBatWindow : WebViewCompositionWindow
         _ = RunTaskOnUIThread(() =>
         {
             var index = Path.Combine(Settings.WebRootPath, Settings.Index);
-            WebView!.Object.Navigate(PWSTR.From(index)).ThrowOnError();
+            WebView!.Navigate(index);
             OnFocusChanged(true);
         });
     }
