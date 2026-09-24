@@ -634,8 +634,14 @@ public partial class WebViewCompositionWindow : CompositionWindow, IDropTarget
             Interlocked.Exchange(ref _controllerEvents, null)?.Dispose();
             Interlocked.Exchange(ref _webViewEvents, null)?.Dispose();
 
+            var controller = Interlocked.Exchange(ref _controller, null);
+            if (controller?.Object is ICoreWebView2Controller coreController)
+            {
+                coreController.Close();
+            }
+
             _environment?.Dispose();
-            _controller?.Dispose();
+            controller?.Dispose();
         }
         base.Dispose(disposing);
     }
