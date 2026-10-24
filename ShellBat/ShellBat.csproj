@@ -195,9 +195,9 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DirectNAot" Version="1.7.0" />
-		<PackageReference Include="DirectNAot.Extensions" Version="1.7.0" />
-		<PackageReference Include="WebView2Aot" Version="1.6.2" />
+		<PackageReference Include="DirectNAot" Version="1.7.1" />
+		<PackageReference Include="DirectNAot.Extensions" Version="1.7.1" />
+		<PackageReference Include="WebView2Aot" Version="1.7.0" />
 		<PackageReference Include="WicNetCore" Version="1.9.8" />
 	</ItemGroup>
 
@@ -294,7 +294,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="1.4.1" />
+		<PackageReference Include="Markdig" Version="1.5.0" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
 	</ItemGroup>
