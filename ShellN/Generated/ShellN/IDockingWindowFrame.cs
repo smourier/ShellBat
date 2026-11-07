@@ -19,5 +19,5 @@ public partial interface IDockingWindowFrame : IOleWindow
     // https://learn.microsoft.com/windows/win32/api/shlobj/nf-shlobj-idockingwindowframe-findtoolbar
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT FindToolbar(PWSTR pwszItem, in Guid riid, out nint ppv);
+    HRESULT FindToolbar(PWSTR pwszItem, in Guid riid, out nint /* void */ ppv);
 }

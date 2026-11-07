@@ -3,6 +3,8 @@ namespace ShellN;
 
 public static partial class Constants
 {
+    public const uint ABC_OVERLAYDESKTOPICONS = 1;
+    
     public const uint ABE_BOTTOM = 3;
     
     public const uint ABE_LEFT = 0;
@@ -3568,6 +3570,8 @@ public static partial class Constants
     public const uint SHI1005_FLAGS_DFS_ROOT = 2;
     
     public const uint SHI1005_FLAGS_DISABLE_CLIENT_BUFFERING = 131072;
+    
+    public const uint SHI1005_FLAGS_DISABLE_CLIENT_METADATA_CACHING = 8388608;
     
     public const uint SHI1005_FLAGS_DISABLE_DIRECTORY_HANDLE_LEASING = 4194304;
     

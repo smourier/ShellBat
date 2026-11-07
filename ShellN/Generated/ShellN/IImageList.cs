@@ -59,12 +59,12 @@ public partial interface IImageList
     // https://learn.microsoft.com/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT Merge(int i1, nint punk2, int i2, int dx, int dy, in Guid riid, out nint ppv);
+    HRESULT Merge(int i1, nint punk2, int i2, int dx, int dy, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-clone
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT Clone(in Guid riid, out nint ppv);
+    HRESULT Clone(in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagerect
     [PreserveSig]
@@ -139,7 +139,7 @@ public partial interface IImageList
     // https://learn.microsoft.com/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT GetDragImage(nint /* optional POINT* */ ppt, nint /* optional POINT* */ pptHotspot, in Guid riid, out nint ppv);
+    HRESULT GetDragImage(nint /* optional POINT* */ ppt, nint /* optional POINT* */ pptHotspot, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getitemflags
     [PreserveSig]

@@ -74,7 +74,7 @@ public partial interface IBrowserService2 : IBrowserService
     // https://learn.microsoft.com/windows/win32/api/shdeprecated/nf-shdeprecated-ibrowserservice2-createbrowserpropsheetext
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT CreateBrowserPropSheetExt(in Guid riid, out nint ppv);
+    HRESULT CreateBrowserPropSheetExt(in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/shdeprecated/nf-shdeprecated-ibrowserservice2-getviewwindow
     [PreserveSig]

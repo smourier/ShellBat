@@ -19,5 +19,5 @@ public partial interface ITransferDestination
     // https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itransferdestination-createitem
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT CreateItem(PWSTR pszName, uint dwAttributes, ulong ullSize, uint flags, in Guid riidItem, out nint ppvItem, in Guid riidResources, out nint ppvResources);
+    HRESULT CreateItem(PWSTR pszName, uint dwAttributes, ulong ullSize, uint flags, in Guid riidItem, out nint /* void */ ppvItem, in Guid riidResources, out nint /* void */ ppvResources);
 }

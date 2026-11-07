@@ -690,7 +690,7 @@ public static partial class Functions
     
     [LibraryImport("hlink")]
     [PreserveSig]
-    public static partial HRESULT HlinkResolveShortcut(PWSTR pwzShortcutFileName, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IHlinkSite>))] IHlinkSite pihlsite, uint dwSiteData, nint piunkOuter, in Guid riid, out nint ppvObj);
+    public static partial HRESULT HlinkResolveShortcut(PWSTR pwzShortcutFileName, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IHlinkSite>))] IHlinkSite pihlsite, uint dwSiteData, nint piunkOuter, in Guid riid, out nint /* void */ ppvObj);
     
     [LibraryImport("hlink")]
     [PreserveSig]
@@ -2068,13 +2068,13 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreateAdapterFromPropertyStore([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertyStore>))] IPropertyStore pps, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreateAdapterFromPropertyStore([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertyStore>))] IPropertyStore pps, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatedelayedmultiplexpropertystore
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreateDelayedMultiplexPropertyStore(GETPROPERTYSTOREFLAGS flags, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IDelayedPropertyStoreFactory>))] IDelayedPropertyStoreFactory pdpsf, [In][MarshalUsing(CountElementName = nameof(cStores))] uint[] rgStoreIds, uint cStores, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreateDelayedMultiplexPropertyStore(GETPROPERTYSTOREFLAGS flags, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IDelayedPropertyStoreFactory>))] IDelayedPropertyStoreFactory pdpsf, [In][MarshalUsing(CountElementName = nameof(cStores))] uint[] rgStoreIds, uint cStores, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatememorypropertystore
     [LibraryImport("PROPSYS")]
@@ -2086,37 +2086,37 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreateMultiplexPropertyStore([In][Out][MarshalUsing(CountElementName = nameof(cStores))] nint[] prgpunkStores, uint cStores, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreateMultiplexPropertyStore([In][Out][MarshalUsing(CountElementName = nameof(cStores))] nint[] prgpunkStores, uint cStores, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatepropertychangearray
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreatePropertyChangeArray(nint /* optional PROPERTYKEY* */ rgpropkey, nint /* optional PKA_FLAGS* */ rgflags, nint /* optional PROPVARIANT* */ rgpropvar, uint cChanges, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreatePropertyChangeArray(nint /* optional PROPERTYKEY* */ rgpropkey, nint /* optional PKA_FLAGS* */ rgflags, nint /* optional PROPVARIANT* */ rgpropvar, uint cChanges, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatepropertystorefromobject
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreatePropertyStoreFromObject(nint punk, uint grfMode, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreatePropertyStoreFromObject(nint punk, uint grfMode, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatepropertystorefrompropertysetstorage
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreatePropertyStoreFromPropertySetStorage([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertySetStorage>))] IPropertySetStorage ppss, uint grfMode, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreatePropertyStoreFromPropertySetStorage([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertySetStorage>))] IPropertySetStorage ppss, uint grfMode, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pscreatesimplepropertychange
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSCreateSimplePropertyChange(PKA_FLAGS flags, in PROPERTYKEY key, in PROPVARIANT propvar, in Guid riid, out nint ppv);
+    public static partial HRESULT PSCreateSimplePropertyChange(PKA_FLAGS flags, in PROPERTYKEY key, in PROPVARIANT propvar, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psenumeratepropertydescriptions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSEnumeratePropertyDescriptions(PROPDESC_ENUMFILTER filterOn, in Guid riid, out nint ppv);
+    public static partial HRESULT PSEnumeratePropertyDescriptions(PROPDESC_ENUMFILTER filterOn, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psformatfordisplay
     [LibraryImport("PROPSYS")]
@@ -2146,13 +2146,13 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetItemPropertyHandler(nint punkItem, BOOL fReadWrite, in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetItemPropertyHandler(nint punkItem, BOOL fReadWrite, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetitempropertyhandlerwithcreateobject
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetItemPropertyHandlerWithCreateObject(nint punkItem, BOOL fReadWrite, nint punkCreateObject, in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetItemPropertyHandlerWithCreateObject(nint punkItem, BOOL fReadWrite, nint punkCreateObject, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetnamedpropertyfrompropertystorage
     [LibraryImport("PROPSYS")]
@@ -2170,19 +2170,19 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetPropertyDescription(in PROPERTYKEY propkey, in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetPropertyDescription(in PROPERTYKEY propkey, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetpropertydescriptionbyname
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetPropertyDescriptionByName(PWSTR pszCanonicalName, in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetPropertyDescriptionByName(PWSTR pszCanonicalName, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetpropertydescriptionlistfromstring
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetPropertyDescriptionListFromString(PWSTR pszPropList, in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetPropertyDescriptionListFromString(PWSTR pszPropList, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetpropertyfrompropertystorage
     [LibraryImport("PROPSYS")]
@@ -2200,7 +2200,7 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows5.1.2600")]
     [PreserveSig]
-    public static partial HRESULT PSGetPropertySystem(in Guid riid, out nint ppv);
+    public static partial HRESULT PSGetPropertySystem(in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-psgetpropertyvalue
     [LibraryImport("PROPSYS")]
@@ -2320,7 +2320,7 @@ public static partial class Functions
     [LibraryImport("PROPSYS")]
     [SupportedOSPlatform("windows6.1")]
     [PreserveSig]
-    public static partial HRESULT PSPropertyBag_ReadUnknown([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertyBag>))] IPropertyBag propBag, PWSTR propName, in Guid riid, out nint ppv);
+    public static partial HRESULT PSPropertyBag_ReadUnknown([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IPropertyBag>))] IPropertyBag propBag, PWSTR propName, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/propsys/nf-propsys-pspropertybag_writebool
     [LibraryImport("PROPSYS")]
@@ -3411,7 +3411,7 @@ public static partial class Functions
     [LibraryImport("SHELL32")]
     [SupportedOSPlatform("windows6.0.6000")]
     [PreserveSig]
-    public static partial HRESULT SHGetPropertyStoreFromIDList(nint pidl, GETPROPERTYSTOREFLAGS flags, in Guid riid, out nint ppv);
+    public static partial HRESULT SHGetPropertyStoreFromIDList(nint pidl, GETPROPERTYSTOREFLAGS flags, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromparsingname
     [LibraryImport("SHELL32")]

@@ -29,5 +29,5 @@ public partial interface IQueryAssociations
     // https://learn.microsoft.com/windows/win32/api/shlwapi/nf-shlwapi-iqueryassociations-getenum
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT GetEnum(ASSOCF flags, ASSOCENUM assocenum, PWSTR pszExtra, in Guid riid, out nint ppvOut);
+    HRESULT GetEnum(ASSOCF flags, ASSOCENUM assocenum, PWSTR pszExtra, in Guid riid, out nint /* void */ ppvOut);
 }

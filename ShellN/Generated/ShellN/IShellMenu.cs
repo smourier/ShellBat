@@ -24,7 +24,7 @@ public partial interface IShellMenu
     // https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellmenu-getshellfolder
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT GetShellFolder(out uint pdwFlags, out nint ppidl, in Guid riid, out nint ppv);
+    HRESULT GetShellFolder(out uint pdwFlags, out nint ppidl, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellmenu-setmenu
     [PreserveSig]

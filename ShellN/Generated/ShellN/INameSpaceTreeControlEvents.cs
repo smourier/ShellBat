@@ -79,12 +79,12 @@ public partial interface INameSpaceTreeControlEvents
     // https://learn.microsoft.com/windows/win32/api/shobjidl/nf-shobjidl-inamespacetreecontrolevents-onbeforecontextmenu
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT OnBeforeContextMenu([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IShellItem?>))] IShellItem? psi, in Guid riid, out nint ppv);
+    HRESULT OnBeforeContextMenu([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IShellItem?>))] IShellItem? psi, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/shobjidl/nf-shobjidl-inamespacetreecontrolevents-onaftercontextmenu
     [PreserveSig]
     [return: MarshalAs(UnmanagedType.Error)]
-    HRESULT OnAfterContextMenu([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IShellItem?>))] IShellItem? psi, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IContextMenu>))] IContextMenu pcmIn, in Guid riid, out nint ppv);
+    HRESULT OnAfterContextMenu([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IShellItem?>))] IShellItem? psi, [MarshalUsing(typeof(UniqueComInterfaceMarshaller<IContextMenu>))] IContextMenu pcmIn, in Guid riid, out nint /* void */ ppv);
     
     // https://learn.microsoft.com/windows/win32/api/shobjidl/nf-shobjidl-inamespacetreecontrolevents-onbeforestateimagechange
     [PreserveSig]

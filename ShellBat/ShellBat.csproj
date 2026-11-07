@@ -26,9 +26,9 @@
 		<PackageTags>File Explorer;File Manager;File Browser;File Viewer;Terminal;Terminal Emulator;Markdown Viewer;Image Viewer;Video Player;Audio Player;PDF Viewer</PackageTags>
 		<Copyright>Copyright (C) 2024-$([System.DateTime]::UtcNow.ToString("yyyy")) Simon Mourier. All rights reserved.</Copyright>
 		<Description>ShellBat</Description>
-		<ProductVersion>1.2.0.0</ProductVersion>
-		<FileVersion>1.2.0.0</FileVersion>
-		<InformationalVersion>1.2.0.0</InformationalVersion>
+		<ProductVersion>1.2.1.0</ProductVersion>
+		<FileVersion>1.2.1.0</FileVersion>
+		<InformationalVersion>1.2.1.0</InformationalVersion>
 		<SourceRevisionId>$([System.DateTime]::UtcNow.ToString("yyyyMMddHH"))</SourceRevisionId>
 
 	</PropertyGroup>
@@ -195,8 +195,8 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="DirectNAot" Version="1.7.1" />
-		<PackageReference Include="DirectNAot.Extensions" Version="1.7.1" />
+		<PackageReference Include="DirectNAot" Version="1.8.0" />
+		<PackageReference Include="DirectNAot.Extensions" Version="1.8.0" />
 		<PackageReference Include="WebView2Aot" Version="1.7.0" />
 		<PackageReference Include="WicNetCore" Version="1.9.9" />
 	</ItemGroup>
@@ -294,7 +294,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="1.5.1" />
+		<PackageReference Include="Markdig" Version="1.6.0" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
 	</ItemGroup>

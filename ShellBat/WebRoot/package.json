@@ -4,7 +4,7 @@
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
     "animate.css": "^4.1.1",
-    "sweetalert2": "^11.26.24",
+    "sweetalert2": "^11.26.25",
     "toastify-js": "^1.12.0"
   }
 }
